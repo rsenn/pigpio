@@ -38,7 +38,7 @@ THIS LIBRARY IS DEPRECATED.  NEW CODE SHOULD BE WRITTEN TO
 USE THE MORE VERSATILE pigpiod_if2 LIBRARY.
 
 pigpiod_if is a C library for the Raspberry which allows control
-of the GPIO via the socket interface to the pigpio daemon. 
+of the GPIO via the socket interface to the pigpio daemon.
 
 *Features*
 
@@ -285,10 +285,9 @@ OVERVIEW*/
 extern "C" {
 #endif
 
-typedef void (*CBFunc_t)  (unsigned user_gpio, unsigned level, uint32_t tick);
+typedef void (*CBFunc_t)(unsigned user_gpio, unsigned level, uint32_t tick);
 
-typedef void (*CBFuncEx_t)
-   (unsigned user_gpio, unsigned level, uint32_t tick, void * user);
+typedef void (*CBFuncEx_t)(unsigned user_gpio, unsigned level, uint32_t tick, void* user);
 
 typedef struct callback_s callback_t;
 
@@ -309,7 +308,7 @@ seconds: the number of seconds to delay.
 D*/
 
 /*F*/
-char *pigpio_error(int errnum);
+char* pigpio_error(int errnum);
 /*D
 Return a text description for an error code.
 
@@ -325,7 +324,7 @@ Return the pigpiod_if version.
 D*/
 
 /*F*/
-pthread_t *start_thread(gpioThreadFunc_t thread_func, void *userdata);
+pthread_t* start_thread(gpioThreadFunc_t thread_func, void* userdata);
 /*D
 Starts a new thread of execution with thread_func as the main routine.
 
@@ -343,7 +342,7 @@ The thread can be cancelled by passing the pointer to pthread_t to
 D*/
 
 /*F*/
-void stop_thread(pthread_t *pth);
+void stop_thread(pthread_t* pth);
 /*D
 Cancels the thread pointed at by pth.
 
@@ -357,7 +356,7 @@ The thread to be stopped should have been started with [*start_thread*].
 D*/
 
 /*F*/
-int pigpio_start(char *addrStr, char *portStr);
+int pigpio_start(char* addrStr, char* portStr);
 /*D
 Connect to the pigpio daemon.  Reserving command and
 notification streams.
@@ -675,7 +674,7 @@ set_PWM_range(25, 2500);
 . .
 
 Thereafter use the [*set_PWM_dutycycle*] function to move the servo,
-e.g. set_PWM_dutycycle(25, 1500) will set a 1500 us pulse. 
+e.g. set_PWM_dutycycle(25, 1500) will set a 1500 us pulse.
 D*/
 
 /*F*/
@@ -948,7 +947,6 @@ A status of PI_SOME_PERMITTED indicates that the user is not
 allowed to write to one or more of the GPIO.
 D*/
 
-
 /*F*/
 int hardware_clock(unsigned gpio, unsigned clkfreq);
 /*D
@@ -986,7 +984,6 @@ Access to clock 1 is protected by a password as its use will likely
 crash the Pi.  The password is given by or'ing 0x5A000000 with the
 GPIO number.
 D*/
-
 
 /*F*/
 int hardware_PWM(unsigned gpio, unsigned PWMfreq, uint32_t PWMduty);
@@ -1031,7 +1028,6 @@ The GPIO must be one of the following.
 . .
 D*/
 
-
 /*F*/
 uint32_t get_current_tick(void);
 /*D
@@ -1073,7 +1069,6 @@ uint32_t get_pigpio_version(void);
 Returns the pigpio version.
 D*/
 
-
 /*F*/
 int wave_clear(void);
 /*D
@@ -1094,7 +1089,7 @@ Returns 0 if OK.
 D*/
 
 /*F*/
-int wave_add_generic(unsigned numPulses, gpioPulse_t *pulses);
+int wave_add_generic(unsigned numPulses, gpioPulse_t* pulses);
 /*D
 This function adds a number of pulses to the current waveform.
 
@@ -1117,9 +1112,7 @@ waveform then the first pulse should consist solely of a delay.
 D*/
 
 /*F*/
-int wave_add_serial
-   (unsigned user_gpio, unsigned baud, unsigned data_bits,
-    unsigned stop_bits, unsigned offset, unsigned numBytes, char *str);
+int wave_add_serial(unsigned user_gpio, unsigned baud, unsigned data_bits, unsigned stop_bits, unsigned offset, unsigned numBytes, char* str);
 /*D
 This function adds a waveform representing serial data to the
 existing waveform (if any).  The serial data starts offset
@@ -1152,8 +1145,8 @@ the same waveform.
 
 The bytes required for each character depend upon [*data_bits*].
 
-For [*data_bits*] 1-8 there will be one byte per character. 
-For [*data_bits*] 9-16 there will be two bytes per character. 
+For [*data_bits*] 1-8 there will be one byte per character.
+For [*data_bits*] 9-16 there will be two bytes per character.
 For [*data_bits*] 17-32 there will be four bytes per character.
 D*/
 
@@ -1197,9 +1190,9 @@ typedef struct
 
 The fields specify
 
-1) the GPIO to be switched on at the start of the pulse. 
-2) the GPIO to be switched off at the start of the pulse. 
-3) the delay in microseconds before the next pulse. 
+1) the GPIO to be switched on at the start of the pulse.
+2) the GPIO to be switched off at the start of the pulse.
+3) the delay in microseconds before the next pulse.
 
 Any or all the fields can be zero.  It doesn't make any sense to
 set all the fields to zero (the pulse will be ignored).
@@ -1210,7 +1203,6 @@ specified delay between the pulse and the next.
 Returns the new waveform id if OK, otherwise PI_EMPTY_WAVEFORM,
 PI_NO_WAVEFORM_ID, PI_TOO_MANY_CBS, or PI_TOO_MANY_OOL.
 D*/
-
 
 /*F*/
 int wave_delete(unsigned wave_id);
@@ -1269,7 +1261,7 @@ otherwise PI_BAD_WAVE_ID, or PI_BAD_WAVE_MODE.
 D*/
 
 /*F*/
-int wave_chain(char *buf, unsigned bufSize);
+int wave_chain(char* buf, unsigned bufSize);
 /*D
 This function transmits a chain of waveforms.
 
@@ -1361,7 +1353,6 @@ int main(int argc, char *argv[])
 ...
 D*/
 
-
 /*F*/
 int wave_tx_busy(void);
 /*D
@@ -1398,7 +1389,7 @@ D*/
 /*F*/
 int wave_get_max_micros(void);
 /*D
-This function returns the maximum possible size of a waveform in 
+This function returns the maximum possible size of a waveform in
 microseconds.
 D*/
 
@@ -1459,7 +1450,7 @@ PI_BAD_PULSELEN, or PI_NOT_PERMITTED.
 D*/
 
 /*F*/
-int store_script(char *script);
+int store_script(char* script);
 /*D
 This function stores a script for later execution.
 
@@ -1474,7 +1465,7 @@ otherwise PI_BAD_SCRIPT.
 D*/
 
 /*F*/
-int run_script(unsigned script_id, unsigned numPar, uint32_t *param);
+int run_script(unsigned script_id, unsigned numPar, uint32_t* param);
 /*D
 This function runs a stored script.
 
@@ -1492,7 +1483,7 @@ the script as p0 to p9.
 D*/
 
 /*F*/
-int script_status(unsigned script_id, uint32_t *param);
+int script_status(unsigned script_id, uint32_t* param);
 /*D
 This function returns the run status of a stored script as well
 as the current values of parameters 0 to 9.
@@ -1564,7 +1555,7 @@ in a timely fashion.
 D*/
 
 /*F*/
-int bb_serial_read(unsigned user_gpio, void *buf, size_t bufSize);
+int bb_serial_read(unsigned user_gpio, void* buf, size_t bufSize);
 /*D
 This function copies up to bufSize bytes of data read from the
 bit bang serial cyclic buffer to the buffer starting at buf.
@@ -1581,8 +1572,8 @@ or PI_NOT_SERIAL_GPIO.
 The bytes returned for each character depend upon the number of
 data bits [*data_bits*] specified in the [*bb_serial_read_open*] command.
 
-For [*data_bits*] 1-8 there will be one byte per character. 
-For [*data_bits*] 9-16 there will be two bytes per character. 
+For [*data_bits*] 1-8 there will be one byte per character.
+For [*data_bits*] 9-16 there will be two bytes per character.
 For [*data_bits*] 17-32 there will be four bytes per character.
 D*/
 
@@ -1643,7 +1634,7 @@ of the function description.  The following abbreviations are used.
 S     (1 bit) : Start bit
 P     (1 bit) : Stop bit
 Rd/Wr (1 bit) : Read/Write bit. Rd equals 1, Wr equals 0.
-A, NA (1 bit) : Accept and not accept bit. 
+A, NA (1 bit) : Accept and not accept bit.
 Addr  (7 bits): I2C 7 bit address.
 Comm  (8 bits): Command byte, a data byte which often selects a register.
 Data  (8 bits): A data byte.
@@ -1827,8 +1818,7 @@ S Addr Wr [A] Comm [A] DataLow [A] DataHigh [A]
 D*/
 
 /*F*/
-int i2c_write_block_data(
-unsigned handle, unsigned i2c_reg, char *buf, unsigned count);
+int i2c_write_block_data(unsigned handle, unsigned i2c_reg, char* buf, unsigned count);
 /*D
 This writes up to 32 bytes to the specified register of the device
 associated with handle.
@@ -1850,7 +1840,7 @@ S Addr Wr [A] Comm [A] Count [A] Data [A] Data [A] ... [A] Data [A] P
 D*/
 
 /*F*/
-int i2c_read_block_data(unsigned handle, unsigned i2c_reg, char *buf);
+int i2c_read_block_data(unsigned handle, unsigned i2c_reg, char* buf);
 /*D
 This reads a block of up to 32 bytes from the specified register of
 the device associated with handle.
@@ -1874,8 +1864,7 @@ S Addr Wr [A] Comm [A]
 D*/
 
 /*F*/
-int i2c_block_process_call(
-unsigned handle, unsigned i2c_reg, char *buf, unsigned count);
+int i2c_block_process_call(unsigned handle, unsigned i2c_reg, char* buf, unsigned count);
 /*D
 This writes data bytes to the specified register of the device
 associated with handle and reads a device specified number
@@ -1904,8 +1893,7 @@ S Addr Wr [A] Comm [A] Count [A] Data [A] ...
 D*/
 
 /*F*/
-int i2c_read_i2c_block_data(
-unsigned handle, unsigned i2c_reg, char *buf, unsigned count);
+int i2c_read_i2c_block_data(unsigned handle, unsigned i2c_reg, char* buf, unsigned count);
 /*D
 This reads count bytes from the specified register of the device
 associated with handle .  The count may be 1-32.
@@ -1926,10 +1914,8 @@ S Addr Wr [A] Comm [A]
 . .
 D*/
 
-
 /*F*/
-int i2c_write_i2c_block_data(
-unsigned handle, unsigned i2c_reg, char *buf, unsigned count);
+int i2c_write_i2c_block_data(unsigned handle, unsigned i2c_reg, char* buf, unsigned count);
 /*D
 This writes 1 to 32 bytes to the specified register of the device
 associated with handle.
@@ -1950,7 +1936,7 @@ S Addr Wr [A] Comm [A] Data [A] Data [A] ... [A] Data [A] P
 D*/
 
 /*F*/
-int i2c_read_device(unsigned handle, char *buf, unsigned count);
+int i2c_read_device(unsigned handle, char* buf, unsigned count);
 /*D
 This reads count bytes from the raw device into buf.
 
@@ -1965,7 +1951,7 @@ PI_I2C_READ_FAILED.
 D*/
 
 /*F*/
-int i2c_write_device(unsigned handle, char *buf, unsigned count);
+int i2c_write_device(unsigned handle, char* buf, unsigned count);
 /*D
 This writes count bytes from buf to the raw device.
 
@@ -1980,12 +1966,7 @@ PI_I2C_WRITE_FAILED.
 D*/
 
 /*F*/
-int i2c_zip(
-   unsigned handle,
-   char    *inBuf,
-   unsigned inLen,
-   char    *outBuf,
-   unsigned outLen);
+int i2c_zip(unsigned handle, char* inBuf, unsigned inLen, char* outBuf, unsigned outLen);
 /*D
 This function executes a sequence of I2C operations.  The
 operations to be performed are specified by the contents of inBuf
@@ -2049,9 +2030,9 @@ specified baud rate.
 Bit banging I2C allows for certain operations which are not possible
 with the standard I2C driver.
 
-o baud rates as low as 50 
-o repeated starts 
-o clock stretching 
+o baud rates as low as 50
+o repeated starts
+o clock stretching
 o I2C on any pair of spare GPIO
 
 . .
@@ -2083,12 +2064,7 @@ Returns 0 if OK, otherwise PI_BAD_USER_GPIO, or PI_NOT_I2C_GPIO.
 D*/
 
 /*F*/
-int bb_i2c_zip(
-   unsigned SDA,
-   char    *inBuf,
-   unsigned inLen,
-   char    *outBuf,
-   unsigned outLen);
+int bb_i2c_zip(unsigned SDA, char* inBuf, unsigned inLen, char* outBuf, unsigned outLen);
 /*D
 This function executes a sequence of bit banged I2C operations.  The
 operations to be performed are specified by the contents of inBuf
@@ -2230,8 +2206,8 @@ The [*spi_read*], [*spi_write*], and [*spi_xfer*] functions
 transfer data packed into 1, 2, or 4 bytes according to
 the word size in bits.
 
-For bits 1-8 there will be one byte per word. 
-For bits 9-16 there will be two bytes per word. 
+For bits 1-8 there will be one byte per word.
+For bits 9-16 there will be two bytes per word.
 For bits 17-32 there will be four bytes per word.
 
 Multi-byte transfers are made in least significant byte first order.
@@ -2258,7 +2234,7 @@ Returns 0 if OK, otherwise PI_BAD_HANDLE.
 D*/
 
 /*F*/
-int spi_read(unsigned handle, char *buf, unsigned count);
+int spi_read(unsigned handle, char* buf, unsigned count);
 /*D
 This function reads count bytes of data from the SPI
 device associated with the handle.
@@ -2274,7 +2250,7 @@ PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
 D*/
 
 /*F*/
-int spi_write(unsigned handle, char *buf, unsigned count);
+int spi_write(unsigned handle, char* buf, unsigned count);
 /*D
 This function writes count bytes of data from buf to the SPI
 device associated with the handle.
@@ -2290,7 +2266,7 @@ PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
 D*/
 
 /*F*/
-int spi_xfer(unsigned handle, char *txBuf, char *rxBuf, unsigned count);
+int spi_xfer(unsigned handle, char* txBuf, char* rxBuf, unsigned count);
 /*D
 This function transfers count bytes of data from txBuf to the SPI
 device associated with the handle.  Simultaneously count bytes of
@@ -2308,7 +2284,7 @@ PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
 D*/
 
 /*F*/
-int serial_open(char *ser_tty, unsigned baud, unsigned ser_flags);
+int serial_open(char* ser_tty, unsigned baud, unsigned ser_flags);
 /*D
 This function opens a serial device at a specified baud rate
 with specified flags.  The device name must start with
@@ -2371,7 +2347,7 @@ If no data is ready PI_SER_READ_NO_DATA is returned.
 D*/
 
 /*F*/
-int serial_write(unsigned handle, char *buf, unsigned count);
+int serial_write(unsigned handle, char* buf, unsigned count);
 /*D
 This function writes count bytes from buf to the the serial port
 associated with handle.
@@ -2387,7 +2363,7 @@ PI_SER_WRITE_FAILED.
 D*/
 
 /*F*/
-int serial_read(unsigned handle, char *buf, unsigned count);
+int serial_read(unsigned handle, char* buf, unsigned count);
 /*D
 This function reads up to count bytes from the the serial port
 associated with handle and writes them to buf.
@@ -2419,7 +2395,7 @@ otherwise PI_BAD_HANDLE.
 D*/
 
 /*F*/
-int custom_1(unsigned arg1, unsigned arg2, char *argx, unsigned argc);
+int custom_1(unsigned arg1, unsigned arg2, char* argx, unsigned argc);
 /*D
 This function is available for user customisation.
 
@@ -2435,10 +2411,8 @@ argc: number of extra arguments
 Returns >= 0 if OK, less than 0 indicates a user defined error.
 D*/
 
-
 /*F*/
-int custom_2(unsigned arg1, char *argx, unsigned argc,
-             char *retBuf, unsigned retMax);
+int custom_2(unsigned arg1, char* argx, unsigned argc, char* retBuf, unsigned retMax);
 /*D
 This function is available for user customisation.
 
@@ -2458,7 +2432,6 @@ Returns >= 0 if OK, less than 0 indicates a user defined error.
 
 Note, the number of returned bytes will be retMax or less.
 D*/
-
 
 /*F*/
 int callback(unsigned user_gpio, unsigned edge, CBFunc_t f);
@@ -2493,8 +2466,7 @@ tick        32 bit   The number of microseconds since boot
 D*/
 
 /*F*/
-int callback_ex
-   (unsigned user_gpio, unsigned edge, CBFuncEx_t f, void *userdata);
+int callback_ex(unsigned user_gpio, unsigned edge, CBFuncEx_t f, void* userdata);
 /*D
 This function initialises a new callback.
 
@@ -2971,19 +2943,18 @@ PARAMS*/
 
 /*DEF_S pigpiod_if Error Codes*/
 
-typedef enum
-{
-   pigif_bad_send           = -2000,
-   pigif_bad_recv           = -2001,
-   pigif_bad_getaddrinfo    = -2002,
-   pigif_bad_connect        = -2003,
-   pigif_bad_socket         = -2004,
-   pigif_bad_noib           = -2005,
-   pigif_duplicate_callback = -2006,
-   pigif_bad_malloc         = -2007,
-   pigif_bad_callback       = -2008,
-   pigif_notify_failed      = -2009,
-   pigif_callback_not_found = -2010,
+typedef enum {
+  pigif_bad_send = -2000,
+  pigif_bad_recv = -2001,
+  pigif_bad_getaddrinfo = -2002,
+  pigif_bad_connect = -2003,
+  pigif_bad_socket = -2004,
+  pigif_bad_noib = -2005,
+  pigif_duplicate_callback = -2006,
+  pigif_bad_malloc = -2007,
+  pigif_bad_callback = -2008,
+  pigif_notify_failed = -2009,
+  pigif_callback_not_found = -2010,
 } pigifError_t;
 
 /*DEF_E*/
@@ -2993,4 +2964,3 @@ typedef enum
 #endif
 
 #endif
-

@@ -32,10 +32,9 @@ This version is for pigpio version 67+
 #ifndef PIGS_H
 #define PIGS_H
 
-#define PIGS_OK            0
+#define PIGS_OK 0
 #define PIGS_CONNECT_ERR 255
-#define PIGS_OPTION_ERR  254
-#define PIGS_SCRIPT_ERR  253
+#define PIGS_OPTION_ERR 254
+#define PIGS_SCRIPT_ERR 253
 
 #endif
-

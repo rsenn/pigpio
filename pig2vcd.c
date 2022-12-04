@@ -48,74 +48,74 @@ into a VCD format understood by GTKWave.
 
 #define RS (sizeof(gpioReport_t))
 
-static char * timeStamp()
-{
-   static char buf[32];
+static char*
+timeStamp() {
+  static char buf[32];
 
-   struct timeval now;
-   struct tm tmp;
+  struct timeval now;
+  struct tm tmp;
 
-   gettimeofday(&now, NULL);
+  gettimeofday(&now, NULL);
 
-   localtime_r(&now.tv_sec, &tmp);
-   strftime(buf, sizeof(buf), "%F %T", &tmp);
+  localtime_r(&now.tv_sec, &tmp);
+  strftime(buf, sizeof(buf), "%F %T", &tmp);
 
-   return buf;
+  return buf;
 }
 
-int symbol(int bit)
-{
-   if (bit < 26) return ('A' + bit);
-   else          return ('a' + bit - 26);
+int
+symbol(int bit) {
+  if(bit < 26)
+    return ('A' + bit);
+  else
+    return ('a' + bit - 26);
 }
 
-int main(int argc, char * argv[])
-{
-   int b, r, v;
-   uint32_t t0;
-   uint32_t lastLevel, changed;
+int
+main(int argc, char* argv[]) {
+  int b, r, v;
+  uint32_t t0;
+  uint32_t lastLevel, changed;
 
-   gpioReport_t report;
+  gpioReport_t report;
 
-   r=read(STDIN_FILENO, &report, RS);
+  r = read(STDIN_FILENO, &report, RS);
 
-   if (r != RS) exit(-1);
+  if(r != RS)
+    exit(-1);
 
-   printf("$date %s $end\n", timeStamp());
-   printf("$version pig2vcd V1 $end\n");
-   printf("$timescale 1 us $end\n");
-   printf("$scope module top $end\n");
+  printf("$date %s $end\n", timeStamp());
+  printf("$version pig2vcd V1 $end\n");
+  printf("$timescale 1 us $end\n");
+  printf("$scope module top $end\n");
 
-   for (b=0; b<32; b++)
-      printf("$var wire 1 %c %d $end\n", symbol(b), b);
-        
-   printf("$upscope $end\n");
-   printf("$enddefinitions $end\n");
-         
-   t0 = report.tick;
-   lastLevel =0;
+  for(b = 0; b < 32; b++) printf("$var wire 1 %c %d $end\n", symbol(b), b);
 
-   while ((r=read(STDIN_FILENO, &report, RS)) == RS)
-   {
-      if (report.level != lastLevel)
-      {
-         printf("#%u\n", report.tick - t0);
+  printf("$upscope $end\n");
+  printf("$enddefinitions $end\n");
 
-         changed = report.level ^ lastLevel;
+  t0 = report.tick;
+  lastLevel = 0;
 
-         lastLevel = report.level;
+  while((r = read(STDIN_FILENO, &report, RS)) == RS) {
+    if(report.level != lastLevel) {
+      printf("#%u\n", report.tick - t0);
 
-         for (b=0; b<32; b++)
-         {
-            if (changed & (1<<b))
-            {
-               if (report.level & (1<<b)) v='1'; else v='0';
+      changed = report.level ^ lastLevel;
 
-               printf("%c%c\n", v, symbol(b));
-            }
-         }
+      lastLevel = report.level;
+
+      for(b = 0; b < 32; b++) {
+        if(changed & (1 << b)) {
+          if(report.level & (1 << b))
+            v = '1';
+          else
+            v = '0';
+
+          printf("%c%c\n", v, symbol(b));
+        }
       }
-   }
-   return 0;
+    }
+  }
+  return 0;
 }
-

@@ -424,49 +424,43 @@ OVERVIEW*/
 extern "C" {
 #endif
 
-typedef struct
-{
-   uint16_t func;
-   uint16_t size;
+typedef struct {
+  uint16_t func;
+  uint16_t size;
 } gpioHeader_t;
 
-typedef struct
-{
-   size_t size;
-   void *ptr;
-   uint32_t data;
+typedef struct {
+  size_t size;
+  void* ptr;
+  uint32_t data;
 } gpioExtent_t;
 
-typedef struct
-{
-   uint32_t tick;
-   uint32_t level;
+typedef struct {
+  uint32_t tick;
+  uint32_t level;
 } gpioSample_t;
 
-typedef struct
-{
-   uint16_t seqno;
-   uint16_t flags;
-   uint32_t tick;
-   uint32_t level;
+typedef struct {
+  uint16_t seqno;
+  uint16_t flags;
+  uint32_t tick;
+  uint32_t level;
 } gpioReport_t;
 
-typedef struct
-{
-   uint32_t gpioOn;
-   uint32_t gpioOff;
-   uint32_t usDelay;
+typedef struct {
+  uint32_t gpioOn;
+  uint32_t gpioOff;
+  uint32_t usDelay;
 } gpioPulse_t;
 
-#define WAVE_FLAG_READ  1
-#define WAVE_FLAG_TICK  2
+#define WAVE_FLAG_READ 1
+#define WAVE_FLAG_TICK 2
 
-typedef struct
-{
-   uint32_t gpioOn;
-   uint32_t gpioOff;
-   uint32_t usDelay;
-   uint32_t flags;
+typedef struct {
+  uint32_t gpioOn;
+  uint32_t gpioOff;
+  uint32_t usDelay;
+  uint32_t flags;
 } rawWave_t;
 
 /*
@@ -482,112 +476,89 @@ The level and tick read values are stored in descending locations
 from the top (topOOL/numTOOL).
 */
 
-typedef struct
-{
-   uint16_t botCB;  /* first CB used by wave  */
-   uint16_t topCB;  /* last CB used by wave   */
-   uint16_t botOOL; /* first bottom OOL used by wave  */
-                    /* botOOL to botOOL + numBOOL - 1 are in use */
-   uint16_t topOOL; /* last top OOL used by wave */
-                    /* topOOL - numTOOL to topOOL are in use.*/
-   uint16_t deleted;
-   uint16_t numCB;
-   uint16_t numBOOL;
-   uint16_t numTOOL;
+typedef struct {
+  uint16_t botCB;  /* first CB used by wave  */
+  uint16_t topCB;  /* last CB used by wave   */
+  uint16_t botOOL; /* first bottom OOL used by wave  */
+                   /* botOOL to botOOL + numBOOL - 1 are in use */
+  uint16_t topOOL; /* last top OOL used by wave */
+                   /* topOOL - numTOOL to topOOL are in use.*/
+  uint16_t deleted;
+  uint16_t numCB;
+  uint16_t numBOOL;
+  uint16_t numTOOL;
 } rawWaveInfo_t;
 
-typedef struct
-{
-   int clk;     /* GPIO for clock           */
-   int mosi;    /* GPIO for MOSI            */
-   int miso;    /* GPIO for MISO            */
-   int ss_pol;  /* slave select off state   */
-   int ss_us;   /* delay after slave select */
-   int clk_pol; /* clock off state          */
-   int clk_pha; /* clock phase              */
-   int clk_us;  /* clock micros             */
+typedef struct {
+  int clk;     /* GPIO for clock           */
+  int mosi;    /* GPIO for MOSI            */
+  int miso;    /* GPIO for MISO            */
+  int ss_pol;  /* slave select off state   */
+  int ss_us;   /* delay after slave select */
+  int clk_pol; /* clock off state          */
+  int clk_pha; /* clock phase              */
+  int clk_us;  /* clock micros             */
 } rawSPI_t;
 
 typedef struct { /* linux/arch/arm/mach-bcm2708/include/mach/dma.h */
-   uint32_t info;
-   uint32_t src;
-   uint32_t dst;
-   uint32_t length;
-   uint32_t stride;
-   uint32_t next;
-   uint32_t pad[2];
+  uint32_t info;
+  uint32_t src;
+  uint32_t dst;
+  uint32_t length;
+  uint32_t stride;
+  uint32_t next;
+  uint32_t pad[2];
 } rawCbs_t;
 
-typedef struct
-{
-   uint16_t addr;  /* slave address       */
-   uint16_t flags;
-   uint16_t len;   /* msg length          */
-   uint8_t  *buf;  /* pointer to msg data */
+typedef struct {
+  uint16_t addr; /* slave address       */
+  uint16_t flags;
+  uint16_t len; /* msg length          */
+  uint8_t* buf; /* pointer to msg data */
 } pi_i2c_msg_t;
 
 /* BSC FIFO size */
 
 #define BSC_FIFO_SIZE 512
 
-typedef struct
-{
-   uint32_t control;          /* Write */
-   int rxCnt;                 /* Read only */
-   char rxBuf[BSC_FIFO_SIZE]; /* Read only */
-   int txCnt;                 /* Write */
-   char txBuf[BSC_FIFO_SIZE]; /* Write */
+typedef struct {
+  uint32_t control;          /* Write */
+  int rxCnt;                 /* Read only */
+  char rxBuf[BSC_FIFO_SIZE]; /* Read only */
+  int txCnt;                 /* Write */
+  char txBuf[BSC_FIFO_SIZE]; /* Write */
 } bsc_xfer_t;
 
+typedef void (*gpioAlertFunc_t)(int gpio, int level, uint32_t tick);
 
-typedef void (*gpioAlertFunc_t)    (int      gpio,
-                                    int      level,
-                                    uint32_t tick);
+typedef void (*gpioAlertFuncEx_t)(int gpio, int level, uint32_t tick, void* userdata);
 
-typedef void (*gpioAlertFuncEx_t)  (int      gpio,
-                                    int      level,
-                                    uint32_t tick,
-                                    void    *userdata);
+typedef void (*eventFunc_t)(int event, uint32_t tick);
 
-typedef void (*eventFunc_t)        (int      event,
-                                    uint32_t tick);
+typedef void (*eventFuncEx_t)(int event, uint32_t tick, void* userdata);
 
-typedef void (*eventFuncEx_t)      (int      event,
-                                    uint32_t tick,
-                                    void    *userdata);
+typedef void (*gpioISRFunc_t)(int gpio, int level, uint32_t tick);
 
-typedef void (*gpioISRFunc_t)      (int      gpio,
-                                    int      level,
-                                    uint32_t tick);
+typedef void (*gpioISRFuncEx_t)(int gpio, int level, uint32_t tick, void* userdata);
 
-typedef void (*gpioISRFuncEx_t)    (int      gpio,
-                                    int      level,
-                                    uint32_t tick,
-                                    void    *userdata);
+typedef void (*gpioTimerFunc_t)(void);
 
-typedef void (*gpioTimerFunc_t)    (void);
+typedef void (*gpioTimerFuncEx_t)(void* userdata);
 
-typedef void (*gpioTimerFuncEx_t)  (void *userdata);
+typedef void (*gpioSignalFunc_t)(int signum);
 
-typedef void (*gpioSignalFunc_t)   (int signum);
+typedef void (*gpioSignalFuncEx_t)(int signum, void* userdata);
 
-typedef void (*gpioSignalFuncEx_t) (int    signum,
-                                    void  *userdata);
+typedef void (*gpioGetSamplesFunc_t)(const gpioSample_t* samples, int numSamples);
 
-typedef void (*gpioGetSamplesFunc_t)   (const gpioSample_t *samples,
-                                        int                 numSamples);
+typedef void (*gpioGetSamplesFuncEx_t)(const gpioSample_t* samples, int numSamples, void* userdata);
 
-typedef void (*gpioGetSamplesFuncEx_t) (const gpioSample_t *samples,
-                                        int                 numSamples,
-                                        void               *userdata);
-
-typedef void *(gpioThreadFunc_t) (void *);
-
+typedef void*(gpioThreadFunc_t)(void*);
 
 /* gpio: 0-53 */
 
-#define PI_MIN_GPIO       0
-#define PI_MAX_GPIO      53
+#define PI_MIN_GPIO 0
+#define PI_MAX_GPIO 53
 
 /* user_gpio: 0-31 */
 
@@ -595,14 +566,14 @@ typedef void *(gpioThreadFunc_t) (void *);
 
 /* level: 0-1 */
 
-#define PI_OFF   0
-#define PI_ON    1
+#define PI_OFF 0
+#define PI_ON 1
 
 #define PI_CLEAR 0
-#define PI_SET   1
+#define PI_SET 1
 
-#define PI_LOW   0
-#define PI_HIGH  1
+#define PI_LOW 0
+#define PI_HIGH 1
 
 /* level: only reported for GPIO time-out, see gpioSetWatchdog */
 
@@ -610,29 +581,29 @@ typedef void *(gpioThreadFunc_t) (void *);
 
 /* mode: 0-7 */
 
-#define PI_INPUT  0
+#define PI_INPUT 0
 #define PI_OUTPUT 1
-#define PI_ALT0   4
-#define PI_ALT1   5
-#define PI_ALT2   6
-#define PI_ALT3   7
-#define PI_ALT4   3
-#define PI_ALT5   2
+#define PI_ALT0 4
+#define PI_ALT1 5
+#define PI_ALT2 6
+#define PI_ALT3 7
+#define PI_ALT4 3
+#define PI_ALT5 2
 
 /* pud: 0-2 */
 
-#define PI_PUD_OFF  0
+#define PI_PUD_OFF 0
 #define PI_PUD_DOWN 1
-#define PI_PUD_UP   2
+#define PI_PUD_UP 2
 
 /* dutycycle: 0-range */
 
-#define PI_DEFAULT_DUTYCYCLE_RANGE   255
+#define PI_DEFAULT_DUTYCYCLE_RANGE 255
 
 /* range: 25-40000 */
 
-#define PI_MIN_DUTYCYCLE_RANGE        25
-#define PI_MAX_DUTYCYCLE_RANGE     40000
+#define PI_MIN_DUTYCYCLE_RANGE 25
+#define PI_MAX_DUTYCYCLE_RANGE 40000
 
 /* pulsewidth: 0, 500-2500 */
 
@@ -643,44 +614,44 @@ typedef void *(gpioThreadFunc_t) (void *);
 /* hardware PWM */
 
 #define PI_HW_PWM_MIN_FREQ 1
-#define PI_HW_PWM_MAX_FREQ      125000000
+#define PI_HW_PWM_MAX_FREQ 125000000
 #define PI_HW_PWM_MAX_FREQ_2711 187500000
 #define PI_HW_PWM_RANGE 1000000
 
 /* hardware clock */
 
-#define PI_HW_CLK_MIN_FREQ       4689
+#define PI_HW_CLK_MIN_FREQ 4689
 #define PI_HW_CLK_MIN_FREQ_2711 13184
-#define PI_HW_CLK_MAX_FREQ      250000000
+#define PI_HW_CLK_MAX_FREQ 250000000
 #define PI_HW_CLK_MAX_FREQ_2711 375000000
 
-#define PI_NOTIFY_SLOTS  32
+#define PI_NOTIFY_SLOTS 32
 
-#define PI_NTFY_FLAGS_EVENT    (1 <<7)
-#define PI_NTFY_FLAGS_ALIVE    (1 <<6)
-#define PI_NTFY_FLAGS_WDOG     (1 <<5)
-#define PI_NTFY_FLAGS_BIT(x) (((x)<<0)&31)
+#define PI_NTFY_FLAGS_EVENT (1 << 7)
+#define PI_NTFY_FLAGS_ALIVE (1 << 6)
+#define PI_NTFY_FLAGS_WDOG (1 << 5)
+#define PI_NTFY_FLAGS_BIT(x) (((x) << 0) & 31)
 
-#define PI_WAVE_BLOCKS     4
+#define PI_WAVE_BLOCKS 4
 #define PI_WAVE_MAX_PULSES (PI_WAVE_BLOCKS * 3000)
-#define PI_WAVE_MAX_CHARS  (PI_WAVE_BLOCKS *  300)
+#define PI_WAVE_MAX_CHARS (PI_WAVE_BLOCKS * 300)
 
-#define PI_BB_I2C_MIN_BAUD     50
+#define PI_BB_I2C_MIN_BAUD 50
 #define PI_BB_I2C_MAX_BAUD 500000
 
-#define PI_BB_SPI_MIN_BAUD     50
+#define PI_BB_SPI_MIN_BAUD 50
 #define PI_BB_SPI_MAX_BAUD 250000
 
-#define PI_BB_SER_MIN_BAUD     50
+#define PI_BB_SER_MIN_BAUD 50
 #define PI_BB_SER_MAX_BAUD 250000
 
 #define PI_BB_SER_NORMAL 0
 #define PI_BB_SER_INVERT 1
 
-#define PI_WAVE_MIN_BAUD      50
+#define PI_WAVE_MIN_BAUD 50
 #define PI_WAVE_MAX_BAUD 1000000
 
-#define PI_SPI_MIN_BAUD     32000
+#define PI_SPI_MIN_BAUD 32000
 #define PI_SPI_MAX_BAUD 125000000
 
 #define PI_MIN_WAVE_DATABITS 1
@@ -694,126 +665,126 @@ typedef void *(gpioThreadFunc_t) (void *);
 #define PI_MAX_WAVES 250
 
 #define PI_MAX_WAVE_CYCLES 65535
-#define PI_MAX_WAVE_DELAY  65535
+#define PI_MAX_WAVE_DELAY 65535
 
 #define PI_WAVE_COUNT_PAGES 10
 
 /* wave tx mode */
 
-#define PI_WAVE_MODE_ONE_SHOT      0
-#define PI_WAVE_MODE_REPEAT        1
+#define PI_WAVE_MODE_ONE_SHOT 0
+#define PI_WAVE_MODE_REPEAT 1
 #define PI_WAVE_MODE_ONE_SHOT_SYNC 2
-#define PI_WAVE_MODE_REPEAT_SYNC   3
+#define PI_WAVE_MODE_REPEAT_SYNC 3
 
 /* special wave at return values */
 
-#define PI_WAVE_NOT_FOUND  9998 /* Transmitted wave not found. */
-#define PI_NO_TX_WAVE      9999 /* No wave being transmitted. */
+#define PI_WAVE_NOT_FOUND 9998 /* Transmitted wave not found. */
+#define PI_NO_TX_WAVE 9999     /* No wave being transmitted. */
 
 /* Files, I2C, SPI, SER */
 
 #define PI_FILE_SLOTS 16
-#define PI_I2C_SLOTS  512
-#define PI_SPI_SLOTS  32
-#define PI_SER_SLOTS  16
+#define PI_I2C_SLOTS 512
+#define PI_SPI_SLOTS 32
+#define PI_SER_SLOTS 16
 
 #define PI_MAX_I2C_ADDR 0x7F
 
 #define PI_NUM_AUX_SPI_CHANNEL 3
 #define PI_NUM_STD_SPI_CHANNEL 2
 
-#define PI_MAX_I2C_DEVICE_COUNT (1<<16)
-#define PI_MAX_SPI_DEVICE_COUNT (1<<16)
+#define PI_MAX_I2C_DEVICE_COUNT (1 << 16)
+#define PI_MAX_SPI_DEVICE_COUNT (1 << 16)
 
 /* max pi_i2c_msg_t per transaction */
 
-#define  PI_I2C_RDRW_IOCTL_MAX_MSGS 42
+#define PI_I2C_RDRW_IOCTL_MAX_MSGS 42
 
 /* flags for i2cTransaction, pi_i2c_msg_t */
 
-#define PI_I2C_M_WR           0x0000 /* write data */
-#define PI_I2C_M_RD           0x0001 /* read data */
-#define PI_I2C_M_TEN          0x0010 /* ten bit chip address */
-#define PI_I2C_M_RECV_LEN     0x0400 /* length will be first received byte */
-#define PI_I2C_M_NO_RD_ACK    0x0800 /* if I2C_FUNC_PROTOCOL_MANGLING */
-#define PI_I2C_M_IGNORE_NAK   0x1000 /* if I2C_FUNC_PROTOCOL_MANGLING */
+#define PI_I2C_M_WR 0x0000           /* write data */
+#define PI_I2C_M_RD 0x0001           /* read data */
+#define PI_I2C_M_TEN 0x0010          /* ten bit chip address */
+#define PI_I2C_M_RECV_LEN 0x0400     /* length will be first received byte */
+#define PI_I2C_M_NO_RD_ACK 0x0800    /* if I2C_FUNC_PROTOCOL_MANGLING */
+#define PI_I2C_M_IGNORE_NAK 0x1000   /* if I2C_FUNC_PROTOCOL_MANGLING */
 #define PI_I2C_M_REV_DIR_ADDR 0x2000 /* if I2C_FUNC_PROTOCOL_MANGLING */
-#define PI_I2C_M_NOSTART      0x4000 /* if I2C_FUNC_PROTOCOL_MANGLING */
+#define PI_I2C_M_NOSTART 0x4000      /* if I2C_FUNC_PROTOCOL_MANGLING */
 
 /* bbI2CZip and i2cZip commands */
 
-#define PI_I2C_END          0
-#define PI_I2C_ESC          1
-#define PI_I2C_START        2
-#define PI_I2C_COMBINED_ON  2
-#define PI_I2C_STOP         3
+#define PI_I2C_END 0
+#define PI_I2C_ESC 1
+#define PI_I2C_START 2
+#define PI_I2C_COMBINED_ON 2
+#define PI_I2C_STOP 3
 #define PI_I2C_COMBINED_OFF 3
-#define PI_I2C_ADDR         4
-#define PI_I2C_FLAGS        5
-#define PI_I2C_READ         6
-#define PI_I2C_WRITE        7
+#define PI_I2C_ADDR 4
+#define PI_I2C_FLAGS 5
+#define PI_I2C_READ 6
+#define PI_I2C_WRITE 7
 
 /* SPI */
 
-#define PI_SPI_FLAGS_BITLEN(x) ((x&63)<<16)
-#define PI_SPI_FLAGS_RX_LSB(x)  ((x&1)<<15)
-#define PI_SPI_FLAGS_TX_LSB(x)  ((x&1)<<14)
-#define PI_SPI_FLAGS_3WREN(x)  ((x&15)<<10)
-#define PI_SPI_FLAGS_3WIRE(x)   ((x&1)<<9)
-#define PI_SPI_FLAGS_AUX_SPI(x) ((x&1)<<8)
-#define PI_SPI_FLAGS_RESVD(x)   ((x&7)<<5)
-#define PI_SPI_FLAGS_CSPOLS(x)  ((x&7)<<2)
-#define PI_SPI_FLAGS_MODE(x)    ((x&3))
+#define PI_SPI_FLAGS_BITLEN(x) ((x & 63) << 16)
+#define PI_SPI_FLAGS_RX_LSB(x) ((x & 1) << 15)
+#define PI_SPI_FLAGS_TX_LSB(x) ((x & 1) << 14)
+#define PI_SPI_FLAGS_3WREN(x) ((x & 15) << 10)
+#define PI_SPI_FLAGS_3WIRE(x) ((x & 1) << 9)
+#define PI_SPI_FLAGS_AUX_SPI(x) ((x & 1) << 8)
+#define PI_SPI_FLAGS_RESVD(x) ((x & 7) << 5)
+#define PI_SPI_FLAGS_CSPOLS(x) ((x & 7) << 2)
+#define PI_SPI_FLAGS_MODE(x) ((x & 3))
 
 /* BSC registers */
 
-#define BSC_DR         0
-#define BSC_RSR        1
-#define BSC_SLV        2
-#define BSC_CR         3
-#define BSC_FR         4
-#define BSC_IFLS       5
-#define BSC_IMSC       6
-#define BSC_RIS        7
-#define BSC_MIS        8
-#define BSC_ICR        9
-#define BSC_DMACR     10
-#define BSC_TDR       11
-#define BSC_GPUSTAT   12
-#define BSC_HCTRL     13
+#define BSC_DR 0
+#define BSC_RSR 1
+#define BSC_SLV 2
+#define BSC_CR 3
+#define BSC_FR 4
+#define BSC_IFLS 5
+#define BSC_IMSC 6
+#define BSC_RIS 7
+#define BSC_MIS 8
+#define BSC_ICR 9
+#define BSC_DMACR 10
+#define BSC_TDR 11
+#define BSC_GPUSTAT 12
+#define BSC_HCTRL 13
 #define BSC_DEBUG_I2C 14
 #define BSC_DEBUG_SPI 15
 
 #define BSC_CR_TESTFIFO 2048
-#define BSC_CR_RXE  512
-#define BSC_CR_TXE  256
-#define BSC_CR_BRK  128
-#define BSC_CR_CPOL  16
-#define BSC_CR_CPHA   8
-#define BSC_CR_I2C    4
-#define BSC_CR_SPI    2
-#define BSC_CR_EN     1
+#define BSC_CR_RXE 512
+#define BSC_CR_TXE 256
+#define BSC_CR_BRK 128
+#define BSC_CR_CPOL 16
+#define BSC_CR_CPHA 8
+#define BSC_CR_I2C 4
+#define BSC_CR_SPI 2
+#define BSC_CR_EN 1
 
 #define BSC_FR_RXBUSY 32
-#define BSC_FR_TXFE   16
-#define BSC_FR_RXFF    8
-#define BSC_FR_TXFF    4
-#define BSC_FR_RXFE    2
-#define BSC_FR_TXBUSY  1
+#define BSC_FR_TXFE 16
+#define BSC_FR_RXFF 8
+#define BSC_FR_TXFF 4
+#define BSC_FR_RXFE 2
+#define BSC_FR_TXBUSY 1
 
 /* BSC GPIO */
 
-#define BSC_SDA      18
-#define BSC_MOSI     20
+#define BSC_SDA 18
+#define BSC_MOSI 20
 #define BSC_SCL_SCLK 19
-#define BSC_MISO     18
-#define BSC_CE_N     21
+#define BSC_MISO 18
+#define BSC_CE_N 21
 
-#define BSC_SDA_2711      10
-#define BSC_MOSI_2711      9
+#define BSC_SDA_2711 10
+#define BSC_MOSI_2711 9
 #define BSC_SCL_SCLK_2711 11
-#define BSC_MISO_2711     10
-#define BSC_CE_N_2711      8
+#define BSC_MISO_2711 10
+#define BSC_CE_N_2711 8
 
 /* Longest busy delay */
 
@@ -834,19 +805,19 @@ typedef void *(gpioThreadFunc_t) (void *);
 #define PI_MIN_MS 10
 #define PI_MAX_MS 60000
 
-#define PI_MAX_SCRIPTS       32
+#define PI_MAX_SCRIPTS 32
 
-#define PI_MAX_SCRIPT_TAGS   50
-#define PI_MAX_SCRIPT_VARS  150
+#define PI_MAX_SCRIPT_TAGS 50
+#define PI_MAX_SCRIPT_VARS 150
 #define PI_MAX_SCRIPT_PARAMS 10
 
 /* script status */
 
 #define PI_SCRIPT_INITING 0
-#define PI_SCRIPT_HALTED  1
+#define PI_SCRIPT_HALTED 1
 #define PI_SCRIPT_RUNNING 2
 #define PI_SCRIPT_WAITING 3
-#define PI_SCRIPT_FAILED  4
+#define PI_SCRIPT_FAILED 4
 
 /* signum: 0-63 */
 
@@ -883,42 +854,39 @@ typedef void *(gpioThreadFunc_t) (void *);
 #define PI_MIN_SOCKET_PORT 1024
 #define PI_MAX_SOCKET_PORT 32000
 
-
 /* ifFlags: */
 
-#define PI_DISABLE_FIFO_IF   1
-#define PI_DISABLE_SOCK_IF   2
+#define PI_DISABLE_FIFO_IF 1
+#define PI_DISABLE_SOCK_IF 2
 #define PI_LOCALHOST_SOCK_IF 4
-#define PI_DISABLE_ALERT     8
+#define PI_DISABLE_ALERT 8
 
 /* memAllocMode */
 
-#define PI_MEM_ALLOC_AUTO    0
+#define PI_MEM_ALLOC_AUTO 0
 #define PI_MEM_ALLOC_PAGEMAP 1
 #define PI_MEM_ALLOC_MAILBOX 2
 
 /* filters */
 
-#define PI_MAX_STEADY  300000
+#define PI_MAX_STEADY 300000
 #define PI_MAX_ACTIVE 1000000
 
 /* gpioCfgInternals */
 
-#define PI_CFG_DBG_LEVEL         0 /* bits 0-3 */
-#define PI_CFG_ALERT_FREQ        4 /* bits 4-7 */
-#define PI_CFG_RT_PRIORITY       (1<<8)
-#define PI_CFG_STATS             (1<<9)
-#define PI_CFG_NOSIGHANDLER      (1<<10)
+#define PI_CFG_DBG_LEVEL 0  /* bits 0-3 */
+#define PI_CFG_ALERT_FREQ 4 /* bits 4-7 */
+#define PI_CFG_RT_PRIORITY (1 << 8)
+#define PI_CFG_STATS (1 << 9)
+#define PI_CFG_NOSIGHANDLER (1 << 10)
 
-#define PI_CFG_ILLEGAL_VAL       (1<<11)
-
+#define PI_CFG_ILLEGAL_VAL (1 << 11)
 
 /* gpioISR */
 
-#define RISING_EDGE  0
+#define RISING_EDGE 0
 #define FALLING_EDGE 1
-#define EITHER_EDGE  2
-
+#define EITHER_EDGE 2
 
 /* pads */
 
@@ -929,19 +897,19 @@ typedef void *(gpioThreadFunc_t) (void *);
 
 /* files */
 
-#define PI_FILE_NONE   0
-#define PI_FILE_MIN    1
-#define PI_FILE_READ   1
-#define PI_FILE_WRITE  2
-#define PI_FILE_RW     3
+#define PI_FILE_NONE 0
+#define PI_FILE_MIN 1
+#define PI_FILE_READ 1
+#define PI_FILE_WRITE 2
+#define PI_FILE_RW 3
 #define PI_FILE_APPEND 4
 #define PI_FILE_CREATE 8
-#define PI_FILE_TRUNC  16
-#define PI_FILE_MAX    31
+#define PI_FILE_TRUNC 16
+#define PI_FILE_MAX 31
 
-#define PI_FROM_START   0
+#define PI_FROM_START 0
 #define PI_FROM_CURRENT 1
-#define PI_FROM_END     2
+#define PI_FROM_END 2
 
 /* Allowed socket connect addresses */
 
@@ -983,7 +951,6 @@ else
 ...
 D*/
 
-
 /*F*/
 void gpioTerminate(void);
 /*D
@@ -1000,7 +967,6 @@ terminates any running threads.
 gpioTerminate();
 ...
 D*/
-
 
 /*F*/
 int gpioSetMode(unsigned gpio, unsigned mode);
@@ -1027,7 +993,6 @@ gpioSetMode(22,PI_ALT0);    // Set GPIO22 to alternative mode 0.
 See [[http://www.raspberrypi.org/documentation/hardware/raspberrypi/bcm2835/BCM2835-ARM-Peripherals.pdf]] page 102 for an overview of the modes.
 D*/
 
-
 /*F*/
 int gpioGetMode(unsigned gpio);
 /*D
@@ -1046,7 +1011,6 @@ if (gpioGetMode(17) != PI_ALT0)
 }
 ...
 D*/
-
 
 /*F*/
 int gpioSetPullUpDown(unsigned gpio, unsigned pud);
@@ -1069,9 +1033,8 @@ gpioSetPullUpDown(23, PI_PUD_OFF);  // Clear any pull-ups/downs.
 ...
 D*/
 
-
 /*F*/
-int gpioRead (unsigned gpio);
+int gpioRead(unsigned gpio);
 /*D
 Reads the GPIO level, on or off.
 
@@ -1087,7 +1050,6 @@ Arduino style: digitalRead.
 printf("GPIO24 is level %d", gpioRead(24));
 ...
 D*/
-
 
 /*F*/
 int gpioWrite(unsigned gpio, unsigned level);
@@ -1109,7 +1071,6 @@ Arduino style: digitalWrite
 gpioWrite(24, 1); // Set GPIO24 high.
 ...
 D*/
-
 
 /*F*/
 int gpioPWM(unsigned user_gpio, unsigned dutycycle);
@@ -1141,7 +1102,6 @@ gpioPWM(23, 0);   // Sets GPIO23 full off.
 ...
 D*/
 
-
 /*F*/
 int gpioGetPWMdutycycle(unsigned user_gpio);
 /*D
@@ -1165,7 +1125,6 @@ will be out of a 1000000 (1M).
 
 Normal PWM range defaults to 255.
 D*/
-
 
 /*F*/
 int gpioSetPWMrange(unsigned user_gpio, unsigned range);
@@ -1201,7 +1160,6 @@ gpioSetPWMrange(24, 2000); // Now 2000 is fully on
 ...
 D*/
 
-
 /*F*/
 int gpioGetPWMrange(unsigned user_gpio);
 /*D
@@ -1219,7 +1177,6 @@ the reported range will be 1000000 (1M).
 r = gpioGetPWMrange(23);
 ...
 D*/
-
 
 /*F*/
 int gpioGetPWMrealRange(unsigned user_gpio);
@@ -1241,7 +1198,6 @@ will be approximately 250M divided by the set PWM frequency.
 rr = gpioGetPWMrealRange(17);
 ...
 D*/
-
 
 /*F*/
 int gpioSetPWMfrequency(unsigned user_gpio, unsigned frequency);
@@ -1299,7 +1255,6 @@ gpioSetPWMfrequency(25, 100000); // Set GPIO25 to highest frequency.
 ...
 D*/
 
-
 /*F*/
 int gpioGetPWMfrequency(unsigned user_gpio);
 /*D
@@ -1323,7 +1278,6 @@ will be that set by [*gpioHardwarePWM*].
 f = gpioGetPWMfrequency(23); // Get frequency used for GPIO23.
 ...
 D*/
-
 
 /*F*/
 int gpioServo(unsigned user_gpio, unsigned pulsewidth);
@@ -1383,7 +1337,6 @@ Thereafter use the PWM command to move the servo,
 e.g. gpioPWM(25, 1500) will set a 1500 us pulse.
 D*/
 
-
 /*F*/
 int gpioGetServoPulsewidth(unsigned user_gpio);
 /*D
@@ -1396,7 +1349,6 @@ user_gpio: 0-31
 Returns 0 (off), 500 (most anti-clockwise) to 2500 (most clockwise)
 if OK, otherwise PI_BAD_USER_GPIO or PI_NOT_SERVO_GPIO.
 D*/
-
 
 /*F*/
 int gpioSetAlertFunc(unsigned user_gpio, gpioAlertFunc_t f);
@@ -1478,10 +1430,8 @@ gpioSetAlertFunc(4, aFunction);
 ...
 D*/
 
-
 /*F*/
-int gpioSetAlertFuncEx(
-   unsigned user_gpio, gpioAlertFuncEx_t f, void *userdata);
+int gpioSetAlertFuncEx(unsigned user_gpio, gpioAlertFuncEx_t f, void* userdata);
 /*D
 Registers a function to be called (a callback) when the specified
 GPIO changes state.
@@ -1521,10 +1471,8 @@ Only one of [*gpioSetAlertFunc*] or [*gpioSetAlertFuncEx*] can be
 registered per GPIO.
 D*/
 
-
 /*F*/
-int gpioSetISRFunc(
-   unsigned gpio, unsigned edge, int timeout, gpioISRFunc_t f);
+int gpioSetISRFunc(unsigned gpio, unsigned edge, int timeout, gpioISRFunc_t f);
 /*D
 Registers a function to be called (a callback) whenever the specified
 GPIO interrupt occurs.
@@ -1586,14 +1534,8 @@ kernel (i.e. this mechanism can not be used to capture several
 interrupts only a few microseconds apart).
 D*/
 
-
 /*F*/
-int gpioSetISRFuncEx(
-   unsigned gpio,
-   unsigned edge,
-   int timeout,
-   gpioISRFuncEx_t f,
-   void *userdata);
+int gpioSetISRFuncEx(unsigned gpio, unsigned edge, int timeout, gpioISRFuncEx_t f, void* userdata);
 /*D
 Registers a function to be called (a callback) whenever the specified
 GPIO interrupt occurs.
@@ -1633,7 +1575,6 @@ registered per GPIO.
 
 See [*gpioSetISRFunc*] for further details.
 D*/
-
 
 /*F*/
 int gpioNotifyOpen(void);
@@ -1679,7 +1620,6 @@ else
 ...
 D*/
 
-
 /*F*/
 int gpioNotifyOpenWithSize(int bufSize);
 /*D
@@ -1690,7 +1630,6 @@ specified, whereas [*gpioNotifyOpen*] uses the default pipe size.
 
 See [*gpioNotifyOpen*] for further details.
 D*/
-
 
 /*F*/
 int gpioNotifyBegin(unsigned handle, uint32_t bits);
@@ -1753,7 +1692,6 @@ gpioNotifyBegin(h, 1234);
 ...
 D*/
 
-
 /*F*/
 int gpioNotifyPause(unsigned handle);
 /*D
@@ -1773,7 +1711,6 @@ gpioNotifyPause(h);
 ...
 D*/
 
-
 /*F*/
 int gpioNotifyClose(unsigned handle);
 /*D
@@ -1791,7 +1728,6 @@ gpioNotifyClose(h);
 ...
 D*/
 
-
 /*F*/
 int gpioWaveClear(void);
 /*D
@@ -1804,7 +1740,6 @@ Returns 0 if OK.
 gpioWaveClear();
 ...
 D*/
-
 
 /*F*/
 int gpioWaveAddNew(void);
@@ -1821,9 +1756,8 @@ gpioWaveAddNew();
 ...
 D*/
 
-
 /*F*/
-int gpioWaveAddGeneric(unsigned numPulses, gpioPulse_t *pulses);
+int gpioWaveAddGeneric(unsigned numPulses, gpioPulse_t* pulses);
 /*D
 This function adds a number of pulses to the current waveform.
 
@@ -1880,16 +1814,8 @@ else
 ...
 D*/
 
-
 /*F*/
-int gpioWaveAddSerial
-   (unsigned user_gpio,
-    unsigned baud,
-    unsigned data_bits,
-    unsigned stop_bits,
-    unsigned offset,
-    unsigned numBytes,
-    char     *str);
+int gpioWaveAddSerial(unsigned user_gpio, unsigned baud, unsigned data_bits, unsigned stop_bits, unsigned offset, unsigned numBytes, char* str);
 /*D
 This function adds a waveform representing serial data to the
 existing waveform (if any).  The serial data starts offset
@@ -1922,8 +1848,8 @@ numBytes is the number of bytes of data in str.
 
 The bytes required for each character depend upon data_bits.
 
-For data_bits 1-8 there will be one byte per character. 
-For data_bits 9-16 there will be two bytes per character. 
+For data_bits 1-8 there will be one byte per character.
+For data_bits 9-16 there will be two bytes per character.
 For data_bits 17-32 there will be four bytes per character.
 
 ...
@@ -1943,7 +1869,6 @@ for (i=0; i<MSG_LEN; i++) data[i] = i;
 gpioWaveAddSerial(4, 9600, 8, 2, 1000000, MSG_LEN, data);
 ...
 D*/
-
 
 /*F*/
 int gpioWaveCreate(void);
@@ -1985,8 +1910,8 @@ typedef struct
 
 The fields specify
 
-1) the GPIO to be switched on at the start of the pulse. 
-2) the GPIO to be switched off at the start of the pulse. 
+1) the GPIO to be switched on at the start of the pulse.
+2) the GPIO to be switched off at the start of the pulse.
 3) the delay in microseconds before the next pulse.
 
 Any or all the fields can be zero.  It doesn't make any sense to
@@ -1998,7 +1923,6 @@ specified delay between the pulse and the next.
 Returns the new waveform id if OK, otherwise PI_EMPTY_WAVEFORM,
 PI_NO_WAVEFORM_ID, PI_TOO_MANY_CBS, or PI_TOO_MANY_OOL.
 D*/
-
 
 /*F*/
 int gpioWaveCreatePad(int pctCB, int pctBOOL, int pctTOOL);
@@ -2066,7 +1990,6 @@ Wave ids are allocated in order, 0, 1, 2, etc.
 Returns 0 if OK, otherwise PI_BAD_WAVE_ID.
 D*/
 
-
 /*F*/
 int gpioWaveTxSend(unsigned wave_id, unsigned wave_mode);
 /*D
@@ -2090,9 +2013,8 @@ Returns the number of DMA control blocks in the waveform if OK,
 otherwise PI_BAD_WAVE_ID, or PI_BAD_WAVE_MODE.
 D*/
 
-
 /*F*/
-int gpioWaveChain(char *buf, unsigned bufSize);
+int gpioWaveChain(char* buf, unsigned bufSize);
 /*D
 This function transmits a chain of waveforms.
 
@@ -2188,7 +2110,6 @@ int main(int argc, char *argv[])
 ...
 D*/
 
-
 /*F*/
 int gpioWaveTxAt(void);
 /*D
@@ -2197,10 +2118,9 @@ transmitted using [*gpioWaveTxSend*].  Chained waves are not supported.
 
 Returns the waveform id or one of the following special values:
 
-PI_WAVE_NOT_FOUND (9998) - transmitted wave not found. 
+PI_WAVE_NOT_FOUND (9998) - transmitted wave not found.
 PI_NO_TX_WAVE (9999) - no wave being transmitted.
 D*/
-
 
 /*F*/
 int gpioWaveTxBusy(void);
@@ -2210,7 +2130,6 @@ transmitted.
 
 Returns 1 if a waveform is currently being transmitted, otherwise 0.
 D*/
-
 
 /*F*/
 int gpioWaveTxStop(void);
@@ -2222,14 +2141,12 @@ Returns 0 if OK.
 This function is intended to stop a waveform started in repeat mode.
 D*/
 
-
 /*F*/
 int gpioWaveGetMicros(void);
 /*D
 This function returns the length in microseconds of the current
 waveform.
 D*/
-
 
 /*F*/
 int gpioWaveGetHighMicros(void);
@@ -2238,7 +2155,6 @@ This function returns the length in microseconds of the longest waveform
 created since [*gpioInitialise*] was called.
 D*/
 
-
 /*F*/
 int gpioWaveGetMaxMicros(void);
 /*D
@@ -2246,13 +2162,11 @@ This function returns the maximum possible size of a waveform in
 microseconds.
 D*/
 
-
 /*F*/
 int gpioWaveGetPulses(void);
 /*D
 This function returns the length in pulses of the current waveform.
 D*/
-
 
 /*F*/
 int gpioWaveGetHighPulses(void);
@@ -2261,13 +2175,11 @@ This function returns the length in pulses of the longest waveform
 created since [*gpioInitialise*] was called.
 D*/
 
-
 /*F*/
 int gpioWaveGetMaxPulses(void);
 /*D
 This function returns the maximum possible size of a waveform in pulses.
 D*/
-
 
 /*F*/
 int gpioWaveGetCbs(void);
@@ -2276,7 +2188,6 @@ This function returns the length in DMA control blocks of the current
 waveform.
 D*/
 
-
 /*F*/
 int gpioWaveGetHighCbs(void);
 /*D
@@ -2284,14 +2195,12 @@ This function returns the length in DMA control blocks of the longest
 waveform created since [*gpioInitialise*] was called.
 D*/
 
-
 /*F*/
 int gpioWaveGetMaxCbs(void);
 /*D
 This function returns the maximum possible size of a waveform in DMA
 control blocks.
 D*/
-
 
 /*F*/
 int gpioSerialReadOpen(unsigned user_gpio, unsigned baud, unsigned data_bits);
@@ -2334,9 +2243,8 @@ The GPIO must be opened for bit bang reading of serial data using
 [*gpioSerialReadOpen*] prior to calling this function.
 D*/
 
-
 /*F*/
-int gpioSerialRead(unsigned user_gpio, void *buf, size_t bufSize);
+int gpioSerialRead(unsigned user_gpio, void* buf, size_t bufSize);
 /*D
 This function copies up to bufSize bytes of data read from the
 bit bang serial cyclic buffer to the buffer starting at buf.
@@ -2353,11 +2261,10 @@ or PI_NOT_SERIAL_GPIO.
 The bytes returned for each character depend upon the number of
 data bits [*data_bits*] specified in the [*gpioSerialReadOpen*] command.
 
-For [*data_bits*] 1-8 there will be one byte per character. 
-For [*data_bits*] 9-16 there will be two bytes per character. 
+For [*data_bits*] 1-8 there will be one byte per character.
+For [*data_bits*] 9-16 there will be two bytes per character.
 For [*data_bits*] 17-32 there will be four bytes per character.
 D*/
-
 
 /*F*/
 int gpioSerialReadClose(unsigned user_gpio);
@@ -2403,7 +2310,7 @@ of the function description.  The following abbreviations are used.
 S      (1 bit) : Start bit
 P      (1 bit) : Stop bit
 Rd/Wr  (1 bit) : Read/Write bit. Rd equals 1, Wr equals 0.
-A, NA  (1 bit) : Accept and not accept bit. 
+A, NA  (1 bit) : Accept and not accept bit.
 Addr   (7 bits): I2C 7 bit address.
 i2cReg (8 bits): Command byte, a byte which often selects a register.
 Data   (8 bits): A data byte.
@@ -2412,7 +2319,6 @@ Count  (8 bits): A byte defining the length of a block operation.
 [..]: Data sent by the device.
 . .
 D*/
-
 
 /*F*/
 int i2cClose(unsigned handle);
@@ -2425,7 +2331,6 @@ handle: >=0, as returned by a call to [*i2cOpen*]
 
 Returns 0 if OK, otherwise PI_BAD_HANDLE.
 D*/
-
 
 /*F*/
 int i2cWriteQuick(unsigned handle, unsigned bit);
@@ -2447,7 +2352,6 @@ S Addr bit [A] P
 . .
 D*/
 
-
 /*F*/
 int i2cWriteByte(unsigned handle, unsigned bVal);
 /*D
@@ -2467,7 +2371,6 @@ S Addr Wr [A] bVal [A] P
 . .
 D*/
 
-
 /*F*/
 int i2cReadByte(unsigned handle);
 /*D
@@ -2485,7 +2388,6 @@ Receive byte. SMBus 2.0 5.5.3
 S Addr Rd [A] [Data] NA P
 . .
 D*/
-
 
 /*F*/
 int i2cWriteByteData(unsigned handle, unsigned i2cReg, unsigned bVal);
@@ -2508,7 +2410,6 @@ S Addr Wr [A] i2cReg [A] bVal [A] P
 . .
 D*/
 
-
 /*F*/
 int i2cWriteWordData(unsigned handle, unsigned i2cReg, unsigned wVal);
 /*D
@@ -2530,7 +2431,6 @@ S Addr Wr [A] i2cReg [A] wValLow [A] wValHigh [A] P
 . .
 D*/
 
-
 /*F*/
 int i2cReadByteData(unsigned handle, unsigned i2cReg);
 /*D
@@ -2551,7 +2451,6 @@ S Addr Wr [A] i2cReg [A] S Addr Rd [A] [Data] NA P
 . .
 D*/
 
-
 /*F*/
 int i2cReadWordData(unsigned handle, unsigned i2cReg);
 /*D
@@ -2571,7 +2470,6 @@ Read word. SMBus 2.0 5.5.5
 S Addr Wr [A] i2cReg [A] S Addr Rd [A] [DataLow] A [DataHigh] NA P
 . .
 D*/
-
 
 /*F*/
 int i2cProcessCall(unsigned handle, unsigned i2cReg, unsigned wVal);
@@ -2595,10 +2493,8 @@ S Addr Wr [A] i2cReg [A] wValLow [A] wValHigh [A]
 . .
 D*/
 
-
 /*F*/
-int i2cWriteBlockData(
-unsigned handle, unsigned i2cReg, char *buf, unsigned count);
+int i2cWriteBlockData(unsigned handle, unsigned i2cReg, char* buf, unsigned count);
 /*D
 This writes up to 32 bytes to the specified register of the device
 associated with handle.
@@ -2620,9 +2516,8 @@ S Addr Wr [A] i2cReg [A] count [A]
 . .
 D*/
 
-
 /*F*/
-int i2cReadBlockData(unsigned handle, unsigned i2cReg, char *buf);
+int i2cReadBlockData(unsigned handle, unsigned i2cReg, char* buf);
 /*D
 This reads a block of up to 32 bytes from the specified register of
 the device associated with handle.
@@ -2645,10 +2540,8 @@ S Addr Wr [A] i2cReg [A]
 . .
 D*/
 
-
 /*F*/
-int i2cBlockProcessCall(
-unsigned handle, unsigned i2cReg, char *buf, unsigned count);
+int i2cBlockProcessCall(unsigned handle, unsigned i2cReg, char* buf, unsigned count);
 /*D
 This writes data bytes to the specified register of the device
 associated with handle and reads a device specified number
@@ -2675,10 +2568,8 @@ S Addr Wr [A] i2cReg [A] count [A] buf0 [A] ... bufn [A]
 . .
 D*/
 
-
 /*F*/
-int i2cReadI2CBlockData(
-unsigned handle, unsigned i2cReg, char *buf, unsigned count);
+int i2cReadI2CBlockData(unsigned handle, unsigned i2cReg, char* buf, unsigned count);
 /*D
 This reads count bytes from the specified register of the device
 associated with handle .  The count may be 1-32.
@@ -2699,10 +2590,8 @@ S Addr Wr [A] i2cReg [A]
 . .
 D*/
 
-
 /*F*/
-int i2cWriteI2CBlockData(
-unsigned handle, unsigned i2cReg, char *buf, unsigned count);
+int i2cWriteI2CBlockData(unsigned handle, unsigned i2cReg, char* buf, unsigned count);
 /*D
 This writes 1 to 32 bytes to the specified register of the device
 associated with handle.
@@ -2723,7 +2612,7 @@ S Addr Wr [A] i2cReg [A] buf0 [A] buf1 [A] ... [A] bufn [A] P
 D*/
 
 /*F*/
-int i2cReadDevice(unsigned handle, char *buf, unsigned count);
+int i2cReadDevice(unsigned handle, char* buf, unsigned count);
 /*D
 This reads count bytes from the raw device into buf.
 
@@ -2741,9 +2630,8 @@ S Addr Rd [A] [buf0] A [buf1] A ... A [bufn] NA P
 . .
 D*/
 
-
 /*F*/
-int i2cWriteDevice(unsigned handle, char *buf, unsigned count);
+int i2cWriteDevice(unsigned handle, char* buf, unsigned count);
 /*D
 This writes count bytes from buf to the raw device.
 
@@ -2777,7 +2665,7 @@ slave address will use a repeated start (rather than a stop/start).
 D*/
 
 /*F*/
-int i2cSegments(unsigned handle, pi_i2c_msg_t *segs, unsigned numSegs);
+int i2cSegments(unsigned handle, pi_i2c_msg_t* segs, unsigned numSegs);
 /*D
 This function executes multiple I2C segments in one transaction by
 calling the I2C_RDWR ioctl.
@@ -2792,12 +2680,7 @@ Returns the number of segments if OK, otherwise PI_BAD_I2C_SEG.
 D*/
 
 /*F*/
-int i2cZip(
-   unsigned handle,
-   char    *inBuf,
-   unsigned inLen,
-   char    *outBuf,
-   unsigned outLen);
+int i2cZip(unsigned handle, char* inBuf, unsigned inLen, char* outBuf, unsigned outLen);
 /*D
 This function executes a sequence of I2C operations.  The
 operations to be performed are specified by the contents of inBuf
@@ -2860,9 +2743,9 @@ specified baud rate.
 Bit banging I2C allows for certain operations which are not possible
 with the standard I2C driver.
 
-o baud rates as low as 50 
-o repeated starts 
-o clock stretching 
+o baud rates as low as 50
+o repeated starts
+o clock stretching
 o I2C on any pair of spare GPIO
 
 . .
@@ -2894,12 +2777,7 @@ Returns 0 if OK, otherwise PI_BAD_USER_GPIO, or PI_NOT_I2C_GPIO.
 D*/
 
 /*F*/
-int bbI2CZip(
-   unsigned SDA,
-   char    *inBuf,
-   unsigned inLen,
-   char    *outBuf,
-   unsigned outLen);
+int bbI2CZip(unsigned SDA, char* inBuf, unsigned inLen, char* outBuf, unsigned outLen);
 /*D
 This function executes a sequence of bit banged I2C operations.  The
 operations to be performed are specified by the contents of inBuf
@@ -2965,7 +2843,7 @@ End
 D*/
 
 /*F*/
-int bscXfer(bsc_xfer_t *bsc_xfer);
+int bscXfer(bsc_xfer_t* bsc_xfer);
 /*D
 This function provides a low-level interface to the SPI/I2C Slave
 peripheral on the BCM chip.
@@ -3112,9 +2990,7 @@ SPI mode.
 D*/
 
 /*F*/
-int bbSPIOpen(
-   unsigned CS, unsigned MISO, unsigned MOSI, unsigned SCLK,
-   unsigned baud, unsigned spiFlags);
+int bbSPIOpen(unsigned CS, unsigned MISO, unsigned MOSI, unsigned SCLK, unsigned baud, unsigned spiFlags);
 /*D
 This function selects a set of GPIO for bit banging SPI with
 a specified baud rate and mode.
@@ -3181,11 +3057,7 @@ Returns 0 if OK, otherwise PI_BAD_USER_GPIO, or PI_NOT_SPI_GPIO.
 D*/
 
 /*F*/
-int bbSPIXfer(
-   unsigned CS,
-   char    *inBuf,
-   char    *outBuf,
-   unsigned count);
+int bbSPIXfer(unsigned CS, char* inBuf, char* outBuf, unsigned count);
 /*D
 This function executes a bit banged SPI transfer.
 
@@ -3343,8 +3215,8 @@ The [*spiRead*], [*spiWrite*], and [*spiXfer*] functions
 transfer data packed into 1, 2, or 4 bytes according to
 the word size in bits.
 
-For bits 1-8 there will be one byte per word. 
-For bits 9-16 there will be two bytes per word. 
+For bits 1-8 there will be one byte per word.
+For bits 9-16 there will be two bytes per word.
 For bits 17-32 there will be four bytes per word.
 
 Multi-byte transfers are made in least significant byte first order.
@@ -3370,9 +3242,8 @@ handle: >=0, as returned by a call to [*spiOpen*]
 Returns 0 if OK, otherwise PI_BAD_HANDLE.
 D*/
 
-
 /*F*/
-int spiRead(unsigned handle, char *buf, unsigned count);
+int spiRead(unsigned handle, char* buf, unsigned count);
 /*D
 This function reads count bytes of data from the SPI
 device associated with the handle.
@@ -3387,9 +3258,8 @@ Returns the number of bytes transferred if OK, otherwise
 PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
 D*/
 
-
 /*F*/
-int spiWrite(unsigned handle, char *buf, unsigned count);
+int spiWrite(unsigned handle, char* buf, unsigned count);
 /*D
 This function writes count bytes of data from buf to the SPI
 device associated with the handle.
@@ -3405,7 +3275,7 @@ PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
 D*/
 
 /*F*/
-int spiXfer(unsigned handle, char *txBuf, char *rxBuf, unsigned count);
+int spiXfer(unsigned handle, char* txBuf, char* rxBuf, unsigned count);
 /*D
 This function transfers count bytes of data from txBuf to the SPI
 device associated with the handle.  Simultaneously count bytes of
@@ -3422,9 +3292,8 @@ Returns the number of bytes transferred if OK, otherwise
 PI_BAD_HANDLE, PI_BAD_SPI_COUNT, or PI_SPI_XFER_FAILED.
 D*/
 
-
 /*F*/
-int serOpen(char *sertty, unsigned baud, unsigned serFlags);
+int serOpen(char* sertty, unsigned baud, unsigned serFlags);
 /*D
 This function opens a serial device at a specified baud rate
 and with specified flags.  The device name must start with
@@ -3445,7 +3314,6 @@ The baud rate must be one of 50, 75, 110, 134, 150,
 
 No flags are currently defined.  This parameter should be set to zero.
 D*/
-
 
 /*F*/
 int serClose(unsigned handle);
@@ -3488,7 +3356,7 @@ If no data is ready PI_SER_READ_NO_DATA is returned.
 D*/
 
 /*F*/
-int serWrite(unsigned handle, char *buf, unsigned count);
+int serWrite(unsigned handle, char* buf, unsigned count);
 /*D
 This function writes count bytes from buf to the the serial port
 associated with handle.
@@ -3503,9 +3371,8 @@ Returns 0 if OK, otherwise PI_BAD_HANDLE, PI_BAD_PARAM, or
 PI_SER_WRITE_FAILED.
 D*/
 
-
 /*F*/
-int serRead(unsigned handle, char *buf, unsigned count);
+int serRead(unsigned handle, char* buf, unsigned count);
 /*D
 This function reads up count bytes from the the serial port
 associated with handle and writes them to buf.
@@ -3522,7 +3389,6 @@ PI_BAD_PARAM, or PI_SER_READ_NO_DATA.
 If no data is ready zero is returned.
 D*/
 
-
 /*F*/
 int serDataAvailable(unsigned handle);
 /*D
@@ -3536,7 +3402,6 @@ handle: >=0, as returned by a call to [*serOpen*]
 Returns the number of bytes of data available (>=0) if OK,
 otherwise PI_BAD_HANDLE.
 D*/
-
 
 /*F*/
 int gpioTrigger(unsigned user_gpio, unsigned pulseLen, unsigned level);
@@ -3553,7 +3418,6 @@ user_gpio: 0-31
 Returns 0 if OK, otherwise PI_BAD_USER_GPIO, PI_BAD_LEVEL,
 or PI_BAD_PULSELEN.
 D*/
-
 
 /*F*/
 int gpioSetWatchdog(unsigned user_gpio, unsigned timeout);
@@ -3598,7 +3462,6 @@ gpioSetWatchdog(4, 5);
 ...
 D*/
 
-
 /*F*/
 int gpioNoiseFilter(unsigned user_gpio, unsigned steady, unsigned active);
 /*D
@@ -3630,7 +3493,6 @@ be reported.  Your software must be designed to cope with
 such reports.
 D*/
 
-
 /*F*/
 int gpioGlitchFilter(unsigned user_gpio, unsigned steady);
 /*D
@@ -3660,7 +3522,6 @@ Each (stable) edge will be timestamped [*steady*] microseconds
 after it was first detected.
 D*/
 
-
 /*F*/
 int gpioSetGetSamplesFunc(gpioGetSamplesFunc_t f, uint32_t bits);
 /*D
@@ -3689,10 +3550,8 @@ e.g.  if there are alerts for GPIO 7, 8, and 9, notifications for GPIO
 7, 8, 9, 10, 17, 23, and 24 will be reported.
 D*/
 
-
 /*F*/
-int gpioSetGetSamplesFuncEx(
-   gpioGetSamplesFuncEx_t f, uint32_t bits, void *userdata);
+int gpioSetGetSamplesFuncEx(gpioGetSamplesFuncEx_t f, uint32_t bits, void* userdata);
 /*D
 Registers a function to be called (a callback) every millisecond
 with the latest GPIO samples.
@@ -3713,7 +3572,6 @@ registered.
 
 See [*gpioSetGetSamplesFunc*] for further details.
 D*/
-
 
 /*F*/
 int gpioSetTimerFunc(unsigned timer, unsigned millis, gpioTimerFunc_t f);
@@ -3745,10 +3603,8 @@ gpioSetTimerFunc(0, 2000, bFunction);
 ...
 D*/
 
-
 /*F*/
-int gpioSetTimerFuncEx(
-   unsigned timer, unsigned millis, gpioTimerFuncEx_t f, void *userdata);
+int gpioSetTimerFuncEx(unsigned timer, unsigned millis, gpioTimerFuncEx_t f, void* userdata);
 /*D
 Registers a function to be called (a callback) every millis milliseconds.
 
@@ -3769,9 +3625,8 @@ registered per timer.
 See [*gpioSetTimerFunc*] for further details.
 D*/
 
-
 /*F*/
-pthread_t *gpioStartThread(gpioThreadFunc_t f, void *userdata);
+pthread_t* gpioStartThread(gpioThreadFunc_t f, void* userdata);
 /*D
 Starts a new thread of execution with f as the main routine.
 
@@ -3823,9 +3678,8 @@ int main(int argc, char *argv[])
 ...
 D*/
 
-
 /*F*/
-void gpioStopThread(pthread_t *pth);
+void gpioStopThread(pthread_t* pth);
 /*D
 Cancels the thread pointed at by pth.
 
@@ -3838,9 +3692,8 @@ No value is returned.
 The thread to be stopped should have been started with [*gpioStartThread*].
 D*/
 
-
 /*F*/
-int gpioStoreScript(char *script);
+int gpioStoreScript(char* script);
 /*D
 This function stores a null terminated script for later execution.
 
@@ -3854,9 +3707,8 @@ The function returns a script id if the script is valid,
 otherwise PI_BAD_SCRIPT.
 D*/
 
-
 /*F*/
-int gpioRunScript(unsigned script_id, unsigned numPar, uint32_t *param);
+int gpioRunScript(unsigned script_id, unsigned numPar, uint32_t* param);
 /*D
 This function runs a stored script.
 
@@ -3873,10 +3725,8 @@ param is an array of up to 10 parameters which may be referenced in
 the script as p0 to p9.
 D*/
 
-
-
 /*F*/
-int gpioUpdateScript(unsigned script_id, unsigned numPar, uint32_t *param);
+int gpioUpdateScript(unsigned script_id, unsigned numPar, uint32_t* param);
 /*D
 This function sets the parameters of a script.  The script may or
 may not be running.  The first numPar parameters of the script are
@@ -3895,9 +3745,8 @@ param is an array of up to 10 parameters which may be referenced in
 the script as p0 to p9.
 D*/
 
-
 /*F*/
-int gpioScriptStatus(unsigned script_id, uint32_t *param);
+int gpioScriptStatus(unsigned script_id, uint32_t* param);
 /*D
 This function returns the run status of a stored script as well as
 the current values of parameters 0 to 9.
@@ -3923,7 +3772,6 @@ PI_SCRIPT_FAILED
 The current value of script parameters 0 to 9 are returned in param.
 D*/
 
-
 /*F*/
 int gpioStopScript(unsigned script_id);
 /*D
@@ -3936,7 +3784,6 @@ script_id: >=0, as returned by [*gpioStoreScript*]
 The function returns 0 if OK, otherwise PI_BAD_SCRIPT_ID.
 D*/
 
-
 /*F*/
 int gpioDeleteScript(unsigned script_id);
 /*D
@@ -3948,7 +3795,6 @@ script_id: >=0, as returned by [*gpioStoreScript*]
 
 The function returns 0 if OK, otherwise PI_BAD_SCRIPT_ID.
 D*/
-
 
 /*F*/
 int gpioSetSignalFunc(unsigned signum, gpioSignalFunc_t f);
@@ -3972,10 +3818,8 @@ By default all signals are treated as fatal and cause the library
 to call gpioTerminate and then exit.
 D*/
 
-
 /*F*/
-int gpioSetSignalFuncEx(
-   unsigned signum, gpioSignalFuncEx_t f, void *userdata);
+int gpioSetSignalFuncEx(unsigned signum, gpioSignalFuncEx_t f, void* userdata);
 /*D
 Registers a function to be called (a callback) when a signal occurs.
 
@@ -3995,20 +3839,17 @@ registered per signal.
 See gpioSetSignalFunc for further details.
 D*/
 
-
 /*F*/
 uint32_t gpioRead_Bits_0_31(void);
 /*D
 Returns the current level of GPIO 0-31.
 D*/
 
-
 /*F*/
 uint32_t gpioRead_Bits_32_53(void);
 /*D
 Returns the current level of GPIO 32-53.
 D*/
-
 
 /*F*/
 int gpioWrite_Bits_0_31_Clear(uint32_t bits);
@@ -4027,7 +3868,6 @@ gpioWrite_Bits_0_31_Clear( (1<<4) | (1<<7) | (1<<15) );
 ...
 D*/
 
-
 /*F*/
 int gpioWrite_Bits_32_53_Clear(uint32_t bits);
 /*D
@@ -4040,7 +3880,6 @@ bits: a bit mask of GPIO to clear
 Returns 0 if OK.
 D*/
 
-
 /*F*/
 int gpioWrite_Bits_0_31_Set(uint32_t bits);
 /*D
@@ -4052,7 +3891,6 @@ bits: a bit mask of GPIO to set
 
 Returns 0 if OK.
 D*/
-
 
 /*F*/
 int gpioWrite_Bits_32_53_Set(uint32_t bits);
@@ -4162,7 +4000,7 @@ automatically scaled to take this into account.
 D*/
 
 /*F*/
-int gpioTime(unsigned timetype, int *seconds, int *micros);
+int gpioTime(unsigned timetype, int* seconds, int* micros);
 /*D
 Updates the seconds and micros variables with the current time.
 
@@ -4188,7 +4026,6 @@ gpioTime(PI_TIME_RELATIVE, &secs, &mics);
 printf("library started %d.%03d seconds ago", secs, mics/1000);
 ...
 D*/
-
 
 /*F*/
 int gpioSleep(unsigned timetype, int seconds, int micros);
@@ -4224,7 +4061,6 @@ gpioSleep(PI_TIME_RELATIVE, 60, 0);     // sleep for one minute
 ...
 D*/
 
-
 /*F*/
 uint32_t gpioDelay(uint32_t micros);
 /*D
@@ -4238,7 +4074,6 @@ Returns the actual length of the delay in microseconds.
 
 Delays of 100 microseconds or less use busy waits.
 D*/
-
 
 /*F*/
 uint32_t gpioTick(void);
@@ -4270,7 +4105,6 @@ printf("some processing took %d microseconds", diffTick);
 ...
 D*/
 
-
 /*F*/
 unsigned gpioHardwareRevision(void);
 /*D
@@ -4293,18 +4127,16 @@ Type 2 boards have hardware revision numbers of 4, 5, 6, and 15.
 
 Type 3 boards have hardware revision numbers of 16 or greater.
 
-for "Revision       : 0002" the function returns 2. 
-for "Revision       : 000f" the function returns 15. 
+for "Revision       : 0002" the function returns 2.
+for "Revision       : 000f" the function returns 15.
 for "Revision       : 000g" the function returns 0.
 D*/
-
 
 /*F*/
 unsigned gpioVersion(void);
 /*D
 Returns the pigpio version.
 D*/
-
 
 /*F*/
 int gpioGetPad(unsigned pad);
@@ -4326,7 +4158,6 @@ Pad @ GPIO
 strength = gpioGetPad(1); // get pad 1 strength
 ...
 D*/
-
 
 /*F*/
 int gpioSetPad(unsigned pad, unsigned padStrength);
@@ -4400,7 +4231,7 @@ The callback may be cancelled by passing NULL as the function.
 D*/
 
 /*F*/
-int eventSetFuncEx(unsigned event, eventFuncEx_t f, void *userdata);
+int eventSetFuncEx(unsigned event, eventFuncEx_t f, void* userdata);
 /*D
 Registers a function to be called (a callback) when the specified
 event occurs.
@@ -4448,9 +4279,8 @@ Note that other than its id and its tick there is no data associated
 with an event.
 D*/
 
-
 /*F*/
-int shell(char *scriptName, char *scriptString);
+int shell(char* scriptName, char* scriptString);
 /*D
 This function uses the system call to execute a shell script
 with the given string as its parameter.
@@ -4496,7 +4326,7 @@ D*/
 #pragma GCC diagnostic ignored "-Wcomment"
 
 /*F*/
-int fileOpen(char *file, unsigned mode);
+int fileOpen(char* file, unsigned mode);
 /*D
 This function returns a handle to a file opened in a specified mode.
 
@@ -4619,9 +4449,8 @@ fileClose(h);
 ...
 D*/
 
-
 /*F*/
-int fileWrite(unsigned handle, char *buf, unsigned count);
+int fileWrite(unsigned handle, char* buf, unsigned count);
 /*D
 This function writes count bytes from buf to the the file
 associated with handle.
@@ -4648,9 +4477,8 @@ else
 ...
 D*/
 
-
 /*F*/
-int fileRead(unsigned handle, char *buf, unsigned count);
+int fileRead(unsigned handle, char* buf, unsigned count);
 /*D
 This function reads up to count bytes from the the file
 associated with handle and writes them to buf.
@@ -4670,7 +4498,6 @@ if (fileRead(h, buf, sizeof(buf)) > 0)
 }
 ...
 D*/
-
 
 /*F*/
 int fileSeek(unsigned handle, int32_t seekOffset, int seekFrom);
@@ -4702,7 +4529,7 @@ D*/
 #pragma GCC diagnostic ignored "-Wcomment"
 
 /*F*/
-int fileList(char *fpat,  char *buf, unsigned count);
+int fileList(char* fpat, char* buf, unsigned count);
 /*D
 This function returns a list of files which match a pattern.  The
 pattern may contain wildcards.
@@ -4755,7 +4582,6 @@ D*/
 
 #pragma GCC diagnostic pop
 
-
 /*F*/
 int gpioCfgBufferSize(unsigned cfgMillis);
 /*D
@@ -4790,10 +4616,8 @@ sample   4       8  12  18   31   55  107  ---
 . .
 D*/
 
-
 /*F*/
-int gpioCfgClock(
-   unsigned cfgMicros, unsigned cfgPeripheral, unsigned cfgSource);
+int gpioCfgClock(unsigned cfgMicros, unsigned cfgPeripheral, unsigned cfgSource);
 /*D
 Configures pigpio to use a particular sample rate timed by a specified
 peripheral.
@@ -4827,7 +4651,6 @@ sample  cpu
 A sample rate of 5 microseconds seeems to be the sweet spot.
 D*/
 
-
 /*F*/
 int gpioCfgDMAchannel(unsigned DMAchannel); /* DEPRECATED */
 /*D
@@ -4841,7 +4664,6 @@ DMAchannel: 0-14
 
 The default setting is to use channel 14.
 D*/
-
 
 /*F*/
 int gpioCfgDMAchannels(unsigned primaryChannel, unsigned secondaryChannel);
@@ -4876,7 +4698,6 @@ a 10 second pulse delay requires one control block on a full channel
 and 611 control blocks on a lite channel.
 D*/
 
-
 /*F*/
 int gpioCfgPermissions(uint64_t updateMask);
 /*D
@@ -4897,12 +4718,11 @@ added to the mask.
 
 If the board revision is not recognised then GPIO 2-27 are allowed.
 
-Unknown board @ PI_DEFAULT_UPDATE_MASK_UNKNOWN @ 0x0FFFFFFC 
-Type 1 board  @ PI_DEFAULT_UPDATE_MASK_B1 @ 0x03E6CF93 
+Unknown board @ PI_DEFAULT_UPDATE_MASK_UNKNOWN @ 0x0FFFFFFC
+Type 1 board  @ PI_DEFAULT_UPDATE_MASK_B1 @ 0x03E6CF93
 Type 2 board  @ PI_DEFAULT_UPDATE_MASK_A_B2 @ 0xFBC6CF9C
 Type 3 board  @ PI_DEFAULT_UPDATE_MASK_R3 @ 0x0FFFFFFC
 D*/
-
 
 /*F*/
 int gpioCfgSocketPort(unsigned port);
@@ -4917,7 +4737,6 @@ port: 1024-32000
 
 The default setting is to use port 8888.
 D*/
-
 
 /*F*/
 int gpioCfgInterfaces(unsigned ifFlags);
@@ -4941,7 +4760,6 @@ access (this means that the socket interface is only
 usable from the local Pi).
 D*/
 
-
 /*F*/
 int gpioCfgMemAlloc(unsigned memAllocMode);
 /*D
@@ -4961,9 +4779,8 @@ Auto will use the mailbox method unless a larger than default buffer
 size is requested with [*gpioCfgBufferSize*].
 D*/
 
-
 /*F*/
-int gpioCfgNetAddr(int numSockAddr, uint32_t *sockAddr);
+int gpioCfgNetAddr(int numSockAddr, uint32_t* sockAddr);
 /*D
 Sets the network addresses which are allowed to talk over the
 socket interface.
@@ -4975,7 +4792,6 @@ numSockAddr: 0-256 (0 means all addresses allowed)
    sockAddr: an array of permitted network addresses.
 . .
 D*/
-
 
 /*F*/
 uint32_t gpioCfgGetInternals(void);
@@ -4996,9 +4812,8 @@ cfgVal: see source code
 
 D*/
 
-
 /*F*/
-int gpioCustom1(unsigned arg1, unsigned arg2, char *argx, unsigned argc);
+int gpioCustom1(unsigned arg1, unsigned arg2, char* argx, unsigned argc);
 /*D
 This function is available for user customisation.
 
@@ -5014,10 +4829,8 @@ argc: number of extra arguments
 Returns >= 0 if OK, less than 0 indicates a user defined error.
 D*/
 
-
 /*F*/
-int gpioCustom2(unsigned arg1, char *argx, unsigned argc,
-                char *retBuf, unsigned retMax);
+int gpioCustom2(unsigned arg1, char* argx, unsigned argc, char* retBuf, unsigned retMax);
 /*D
 This function is available for user customisation.
 
@@ -5038,17 +4851,8 @@ Returns >= 0 if OK, less than 0 indicates a user defined error.
 The number of returned bytes must be retMax or less.
 D*/
 
-
 /*F*/
-int rawWaveAddSPI(
-   rawSPI_t *spi,
-   unsigned offset,
-   unsigned spiSS,
-   char *buf,
-   unsigned spiTxBits,
-   unsigned spiBitFirst,
-   unsigned spiBitLast,
-   unsigned spiBits);
+int rawWaveAddSPI(rawSPI_t* spi, unsigned offset, unsigned spiSS, char* buf, unsigned spiTxBits, unsigned spiBitFirst, unsigned spiBitLast, unsigned spiBits);
 /*D
 This function adds a waveform representing SPI data to the
 existing waveform (if any).
@@ -5071,7 +4875,7 @@ Not intended for general use.
 D*/
 
 /*F*/
-int rawWaveAddGeneric(unsigned numPulses, rawWave_t *pulses);
+int rawWaveAddGeneric(unsigned numPulses, rawWave_t* pulses);
 /*D
 This function adds a number of pulses to the current waveform.
 
@@ -5107,7 +4911,7 @@ Not intended for general use.
 D*/
 
 /*F*/
-rawCbs_t *rawWaveCBAdr(int cbNum);
+rawCbs_t* rawWaveCBAdr(int cbNum);
 /*D
 Return the (Linux) address of contol block cbNum.
 
@@ -5129,7 +4933,6 @@ pos: the position of interest.
 
 Not intended for general use.
 D*/
-
 
 /*F*/
 void rawWaveSetOOL(int pos, uint32_t lVal);
@@ -5157,7 +4960,6 @@ pos: the position of interest.
 
 Not intended for general use.
 D*/
-
 
 /*F*/
 void rawWaveSetOut(int pos, uint32_t lVal);
@@ -5188,7 +4990,6 @@ pos: the position of interest
 Not intended for general use.
 D*/
 
-
 /*F*/
 void rawWaveSetIn(int pos, uint32_t lVal);
 /*D
@@ -5217,7 +5018,7 @@ Not intended for general use.
 D*/
 
 /*F*/
-int getBitInBytes(int bitPos, char *buf, int numBits);
+int getBitInBytes(int bitPos, char* buf, int numBits);
 /*D
 Returns the value of the bit bitPos bits from the start of buf.  Returns
 0 if bitPos is greater than or equal to numBits.
@@ -5231,7 +5032,7 @@ numBits: number of valid bits in buf
 D*/
 
 /*F*/
-void putBitInBytes(int bitPos, char *buf, int bit);
+void putBitInBytes(int bitPos, char* buf, int bit);
 /*D
 Sets the bit bitPos bits from the start of buf to bit.
 
@@ -5249,7 +5050,6 @@ double time_time(void);
 Return the current time in seconds since the Epoch.
 D*/
 
-
 /*F*/
 void time_sleep(double seconds);
 /*D
@@ -5260,7 +5060,6 @@ seconds: the number of seconds to sleep
 . .
 D*/
 
-
 /*F*/
 void rawDumpWave(void);
 /*D
@@ -5268,7 +5067,6 @@ Used to print a readable version of the current waveform to stderr.
 
 Not intended for general use.
 D*/
-
 
 /*F*/
 void rawDumpScript(unsigned script_id);
@@ -5281,7 +5079,6 @@ script_id: >=0, a script_id returned by [*gpioStoreScript*]
 
 Not intended for general use.
 D*/
-
 
 #ifdef __cplusplus
 }
@@ -5391,7 +5188,7 @@ cfgWhat::
 
 A number specifying a configuration item.
 
-562484977: print enhanced statistics at termination. 
+562484977: print enhanced statistics at termination.
 984762879: set the initial debug level.
 
 char::
@@ -5531,13 +5328,13 @@ gpioCfg*::
 
 These functions are only effective if called before [*gpioInitialise*].
 
-[*gpioCfgBufferSize*] 
-[*gpioCfgClock*] 
-[*gpioCfgDMAchannel*] 
-[*gpioCfgDMAchannels*] 
-[*gpioCfgPermissions*] 
-[*gpioCfgInterfaces*] 
-[*gpioCfgSocketPort*] 
+[*gpioCfgBufferSize*]
+[*gpioCfgClock*]
+[*gpioCfgDMAchannel*]
+[*gpioCfgDMAchannels*]
+[*gpioCfgPermissions*]
+[*gpioCfgInterfaces*]
+[*gpioCfgSocketPort*]
 [*gpioCfgMemAlloc*]
 
 gpioGetSamplesFunc_t::
@@ -5612,18 +5409,18 @@ gpioWaveAdd*::
 
 One of
 
-[*gpioWaveAddNew*] 
-[*gpioWaveAddGeneric*] 
+[*gpioWaveAddNew*]
+[*gpioWaveAddGeneric*]
 [*gpioWaveAddSerial*]
 
 handle::>=0
 
 A number referencing an object opened by one of
 
-[*fileOpen*] 
-[*gpioNotifyOpen*] 
-[*i2cOpen*] 
-[*serOpen*] 
+[*fileOpen*]
+[*gpioNotifyOpen*]
+[*i2cOpen*]
+[*serOpen*]
 [*spiOpen*]
 
 i2cAddr:: 0-0x7F
@@ -6131,10 +5928,10 @@ following technique.
 In the calling function:
 
 . .
-user_type *userdata; 
+user_type *userdata;
 user_type my_userdata;
 
-userdata = malloc(sizeof(user_type)); 
+userdata = malloc(sizeof(user_type));
 *userdata = my_userdata;
 . .
 
@@ -6176,63 +5973,63 @@ PARAMS*/
 
 /*DEF_S Socket Command Codes*/
 
-#define PI_CMD_MODES  0
-#define PI_CMD_MODEG  1
-#define PI_CMD_PUD    2
-#define PI_CMD_READ   3
-#define PI_CMD_WRITE  4
-#define PI_CMD_PWM    5
-#define PI_CMD_PRS    6
-#define PI_CMD_PFS    7
-#define PI_CMD_SERVO  8
-#define PI_CMD_WDOG   9
-#define PI_CMD_BR1   10
-#define PI_CMD_BR2   11
-#define PI_CMD_BC1   12
-#define PI_CMD_BC2   13
-#define PI_CMD_BS1   14
-#define PI_CMD_BS2   15
-#define PI_CMD_TICK  16
+#define PI_CMD_MODES 0
+#define PI_CMD_MODEG 1
+#define PI_CMD_PUD 2
+#define PI_CMD_READ 3
+#define PI_CMD_WRITE 4
+#define PI_CMD_PWM 5
+#define PI_CMD_PRS 6
+#define PI_CMD_PFS 7
+#define PI_CMD_SERVO 8
+#define PI_CMD_WDOG 9
+#define PI_CMD_BR1 10
+#define PI_CMD_BR2 11
+#define PI_CMD_BC1 12
+#define PI_CMD_BC2 13
+#define PI_CMD_BS1 14
+#define PI_CMD_BS2 15
+#define PI_CMD_TICK 16
 #define PI_CMD_HWVER 17
-#define PI_CMD_NO    18
-#define PI_CMD_NB    19
-#define PI_CMD_NP    20
-#define PI_CMD_NC    21
-#define PI_CMD_PRG   22
-#define PI_CMD_PFG   23
-#define PI_CMD_PRRG  24
-#define PI_CMD_HELP  25
+#define PI_CMD_NO 18
+#define PI_CMD_NB 19
+#define PI_CMD_NP 20
+#define PI_CMD_NC 21
+#define PI_CMD_PRG 22
+#define PI_CMD_PFG 23
+#define PI_CMD_PRRG 24
+#define PI_CMD_HELP 25
 #define PI_CMD_PIGPV 26
 #define PI_CMD_WVCLR 27
-#define PI_CMD_WVAG  28
-#define PI_CMD_WVAS  29
-#define PI_CMD_WVGO  30
+#define PI_CMD_WVAG 28
+#define PI_CMD_WVAS 29
+#define PI_CMD_WVGO 30
 #define PI_CMD_WVGOR 31
 #define PI_CMD_WVBSY 32
 #define PI_CMD_WVHLT 33
-#define PI_CMD_WVSM  34
-#define PI_CMD_WVSP  35
-#define PI_CMD_WVSC  36
-#define PI_CMD_TRIG  37
-#define PI_CMD_PROC  38
+#define PI_CMD_WVSM 34
+#define PI_CMD_WVSP 35
+#define PI_CMD_WVSC 36
+#define PI_CMD_TRIG 37
+#define PI_CMD_PROC 38
 #define PI_CMD_PROCD 39
 #define PI_CMD_PROCR 40
 #define PI_CMD_PROCS 41
-#define PI_CMD_SLRO  42
-#define PI_CMD_SLR   43
-#define PI_CMD_SLRC  44
+#define PI_CMD_SLRO 42
+#define PI_CMD_SLR 43
+#define PI_CMD_SLRC 44
 #define PI_CMD_PROCP 45
-#define PI_CMD_MICS  46
-#define PI_CMD_MILS  47
+#define PI_CMD_MICS 46
+#define PI_CMD_MILS 47
 #define PI_CMD_PARSE 48
 #define PI_CMD_WVCRE 49
 #define PI_CMD_WVDEL 50
-#define PI_CMD_WVTX  51
+#define PI_CMD_WVTX 51
 #define PI_CMD_WVTXR 52
 #define PI_CMD_WVNEW 53
 
-#define PI_CMD_I2CO  54
-#define PI_CMD_I2CC  55
+#define PI_CMD_I2CO 54
+#define PI_CMD_I2CC 55
 #define PI_CMD_I2CRD 56
 #define PI_CMD_I2CWD 57
 #define PI_CMD_I2CWQ 58
@@ -6249,59 +6046,59 @@ PARAMS*/
 #define PI_CMD_I2CPC 69
 #define PI_CMD_I2CPK 70
 
-#define PI_CMD_SPIO  71
-#define PI_CMD_SPIC  72
-#define PI_CMD_SPIR  73
-#define PI_CMD_SPIW  74
-#define PI_CMD_SPIX  75
+#define PI_CMD_SPIO 71
+#define PI_CMD_SPIC 72
+#define PI_CMD_SPIR 73
+#define PI_CMD_SPIW 74
+#define PI_CMD_SPIX 75
 
-#define PI_CMD_SERO  76
-#define PI_CMD_SERC  77
+#define PI_CMD_SERO 76
+#define PI_CMD_SERC 77
 #define PI_CMD_SERRB 78
 #define PI_CMD_SERWB 79
-#define PI_CMD_SERR  80
-#define PI_CMD_SERW  81
+#define PI_CMD_SERR 80
+#define PI_CMD_SERW 81
 #define PI_CMD_SERDA 82
 
-#define PI_CMD_GDC   83
-#define PI_CMD_GPW   84
+#define PI_CMD_GDC 83
+#define PI_CMD_GPW 84
 
-#define PI_CMD_HC    85
-#define PI_CMD_HP    86
+#define PI_CMD_HC 85
+#define PI_CMD_HP 86
 
-#define PI_CMD_CF1   87
-#define PI_CMD_CF2   88
+#define PI_CMD_CF1 87
+#define PI_CMD_CF2 88
 
 #define PI_CMD_BI2CC 89
 #define PI_CMD_BI2CO 90
 #define PI_CMD_BI2CZ 91
 
-#define PI_CMD_I2CZ  92
+#define PI_CMD_I2CZ 92
 
 #define PI_CMD_WVCHA 93
 
-#define PI_CMD_SLRI  94
+#define PI_CMD_SLRI 94
 
-#define PI_CMD_CGI   95
-#define PI_CMD_CSI   96
+#define PI_CMD_CGI 95
+#define PI_CMD_CSI 96
 
-#define PI_CMD_FG    97
-#define PI_CMD_FN    98
+#define PI_CMD_FG 97
+#define PI_CMD_FN 98
 
-#define PI_CMD_NOIB  99
+#define PI_CMD_NOIB 99
 
 #define PI_CMD_WVTXM 100
 #define PI_CMD_WVTAT 101
 
-#define PI_CMD_PADS  102
-#define PI_CMD_PADG  103
+#define PI_CMD_PADS 102
+#define PI_CMD_PADG 103
 
-#define PI_CMD_FO    104
-#define PI_CMD_FC    105
-#define PI_CMD_FR    106
-#define PI_CMD_FW    107
-#define PI_CMD_FS    108
-#define PI_CMD_FL    109
+#define PI_CMD_FO 104
+#define PI_CMD_FC 105
+#define PI_CMD_FR 106
+#define PI_CMD_FW 107
+#define PI_CMD_FS 108
+#define PI_CMD_FL 109
 
 #define PI_CMD_SHELL 110
 
@@ -6309,10 +6106,10 @@ PARAMS*/
 #define PI_CMD_BSPIO 112
 #define PI_CMD_BSPIX 113
 
-#define PI_CMD_BSCX  114
+#define PI_CMD_BSCX 114
 
-#define PI_CMD_EVM   115
-#define PI_CMD_EVT   116
+#define PI_CMD_EVM 115
+#define PI_CMD_EVT 116
 
 #define PI_CMD_PROCU 117
 #define PI_CMD_WVCAP 118
@@ -6333,240 +6130,239 @@ after this command is issued.
 
 #define PI_CMD_SCRIPT 800
 
-#define PI_CMD_ADD   800
-#define PI_CMD_AND   801
-#define PI_CMD_CALL  802
-#define PI_CMD_CMDR  803
-#define PI_CMD_CMDW  804
-#define PI_CMD_CMP   805
-#define PI_CMD_DCR   806
-#define PI_CMD_DCRA  807
-#define PI_CMD_DIV   808
-#define PI_CMD_HALT  809
-#define PI_CMD_INR   810
-#define PI_CMD_INRA  811
-#define PI_CMD_JM    812
-#define PI_CMD_JMP   813
-#define PI_CMD_JNZ   814
-#define PI_CMD_JP    815
-#define PI_CMD_JZ    816
-#define PI_CMD_TAG   817
-#define PI_CMD_LD    818
-#define PI_CMD_LDA   819
-#define PI_CMD_LDAB  820
-#define PI_CMD_MLT   821
-#define PI_CMD_MOD   822
-#define PI_CMD_NOP   823
-#define PI_CMD_OR    824
-#define PI_CMD_POP   825
-#define PI_CMD_POPA  826
-#define PI_CMD_PUSH  827
+#define PI_CMD_ADD 800
+#define PI_CMD_AND 801
+#define PI_CMD_CALL 802
+#define PI_CMD_CMDR 803
+#define PI_CMD_CMDW 804
+#define PI_CMD_CMP 805
+#define PI_CMD_DCR 806
+#define PI_CMD_DCRA 807
+#define PI_CMD_DIV 808
+#define PI_CMD_HALT 809
+#define PI_CMD_INR 810
+#define PI_CMD_INRA 811
+#define PI_CMD_JM 812
+#define PI_CMD_JMP 813
+#define PI_CMD_JNZ 814
+#define PI_CMD_JP 815
+#define PI_CMD_JZ 816
+#define PI_CMD_TAG 817
+#define PI_CMD_LD 818
+#define PI_CMD_LDA 819
+#define PI_CMD_LDAB 820
+#define PI_CMD_MLT 821
+#define PI_CMD_MOD 822
+#define PI_CMD_NOP 823
+#define PI_CMD_OR 824
+#define PI_CMD_POP 825
+#define PI_CMD_POPA 826
+#define PI_CMD_PUSH 827
 #define PI_CMD_PUSHA 828
-#define PI_CMD_RET   829
-#define PI_CMD_RL    830
-#define PI_CMD_RLA   831
-#define PI_CMD_RR    832
-#define PI_CMD_RRA   833
-#define PI_CMD_STA   834
-#define PI_CMD_STAB  835
-#define PI_CMD_SUB   836
-#define PI_CMD_SYS   837
-#define PI_CMD_WAIT  838
-#define PI_CMD_X     839
-#define PI_CMD_XA    840
-#define PI_CMD_XOR   841
+#define PI_CMD_RET 829
+#define PI_CMD_RL 830
+#define PI_CMD_RLA 831
+#define PI_CMD_RR 832
+#define PI_CMD_RRA 833
+#define PI_CMD_STA 834
+#define PI_CMD_STAB 835
+#define PI_CMD_SUB 836
+#define PI_CMD_SYS 837
+#define PI_CMD_WAIT 838
+#define PI_CMD_X 839
+#define PI_CMD_XA 840
+#define PI_CMD_XOR 841
 #define PI_CMD_EVTWT 842
 
 /*DEF_S Error Codes*/
 
-#define PI_INIT_FAILED       -1 // gpioInitialise failed
-#define PI_BAD_USER_GPIO     -2 // GPIO not 0-31
-#define PI_BAD_GPIO          -3 // GPIO not 0-53
-#define PI_BAD_MODE          -4 // mode not 0-7
-#define PI_BAD_LEVEL         -5 // level not 0-1
-#define PI_BAD_PUD           -6 // pud not 0-2
-#define PI_BAD_PULSEWIDTH    -7 // pulsewidth not 0 or 500-2500
-#define PI_BAD_DUTYCYCLE     -8 // dutycycle outside set range
-#define PI_BAD_TIMER         -9 // timer not 0-9
-#define PI_BAD_MS           -10 // ms not 10-60000
-#define PI_BAD_TIMETYPE     -11 // timetype not 0-1
-#define PI_BAD_SECONDS      -12 // seconds < 0
-#define PI_BAD_MICROS       -13 // micros not 0-999999
-#define PI_TIMER_FAILED     -14 // gpioSetTimerFunc failed
-#define PI_BAD_WDOG_TIMEOUT -15 // timeout not 0-60000
-#define PI_NO_ALERT_FUNC    -16 // DEPRECATED
-#define PI_BAD_CLK_PERIPH   -17 // clock peripheral not 0-1
-#define PI_BAD_CLK_SOURCE   -18 // DEPRECATED
-#define PI_BAD_CLK_MICROS   -19 // clock micros not 1, 2, 4, 5, 8, or 10
-#define PI_BAD_BUF_MILLIS   -20 // buf millis not 100-10000
-#define PI_BAD_DUTYRANGE    -21 // dutycycle range not 25-40000
-#define PI_BAD_DUTY_RANGE   -21 // DEPRECATED (use PI_BAD_DUTYRANGE)
-#define PI_BAD_SIGNUM       -22 // signum not 0-63
-#define PI_BAD_PATHNAME     -23 // can't open pathname
-#define PI_NO_HANDLE        -24 // no handle available
-#define PI_BAD_HANDLE       -25 // unknown handle
-#define PI_BAD_IF_FLAGS     -26 // ifFlags > 4
-#define PI_BAD_CHANNEL      -27 // DMA channel not 0-15
-#define PI_BAD_PRIM_CHANNEL -27 // DMA primary channel not 0-15
-#define PI_BAD_SOCKET_PORT  -28 // socket port not 1024-32000
-#define PI_BAD_FIFO_COMMAND -29 // unrecognized fifo command
-#define PI_BAD_SECO_CHANNEL -30 // DMA secondary channel not 0-15
-#define PI_NOT_INITIALISED  -31 // function called before gpioInitialise
-#define PI_INITIALISED      -32 // function called after gpioInitialise
-#define PI_BAD_WAVE_MODE    -33 // waveform mode not 0-3
-#define PI_BAD_CFG_INTERNAL -34 // bad parameter in gpioCfgInternals call
-#define PI_BAD_WAVE_BAUD    -35 // baud rate not 50-250K(RX)/50-1M(TX)
-#define PI_TOO_MANY_PULSES  -36 // waveform has too many pulses
-#define PI_TOO_MANY_CHARS   -37 // waveform has too many chars
-#define PI_NOT_SERIAL_GPIO  -38 // no bit bang serial read on GPIO
-#define PI_BAD_SERIAL_STRUC -39 // bad (null) serial structure parameter
-#define PI_BAD_SERIAL_BUF   -40 // bad (null) serial buf parameter
-#define PI_NOT_PERMITTED    -41 // GPIO operation not permitted
-#define PI_SOME_PERMITTED   -42 // one or more GPIO not permitted
-#define PI_BAD_WVSC_COMMND  -43 // bad WVSC subcommand
-#define PI_BAD_WVSM_COMMND  -44 // bad WVSM subcommand
-#define PI_BAD_WVSP_COMMND  -45 // bad WVSP subcommand
-#define PI_BAD_PULSELEN     -46 // trigger pulse length not 1-100
-#define PI_BAD_SCRIPT       -47 // invalid script
-#define PI_BAD_SCRIPT_ID    -48 // unknown script id
-#define PI_BAD_SER_OFFSET   -49 // add serial data offset > 30 minutes
-#define PI_GPIO_IN_USE      -50 // GPIO already in use
-#define PI_BAD_SERIAL_COUNT -51 // must read at least a byte at a time
-#define PI_BAD_PARAM_NUM    -52 // script parameter id not 0-9
-#define PI_DUP_TAG          -53 // script has duplicate tag
-#define PI_TOO_MANY_TAGS    -54 // script has too many tags
-#define PI_BAD_SCRIPT_CMD   -55 // illegal script command
-#define PI_BAD_VAR_NUM      -56 // script variable id not 0-149
-#define PI_NO_SCRIPT_ROOM   -57 // no more room for scripts
-#define PI_NO_MEMORY        -58 // can't allocate temporary memory
-#define PI_SOCK_READ_FAILED -59 // socket read failed
-#define PI_SOCK_WRIT_FAILED -60 // socket write failed
-#define PI_TOO_MANY_PARAM   -61 // too many script parameters (> 10)
-#define PI_NOT_HALTED       -62 // DEPRECATED
-#define PI_SCRIPT_NOT_READY -62 // script initialising
-#define PI_BAD_TAG          -63 // script has unresolved tag
-#define PI_BAD_MICS_DELAY   -64 // bad MICS delay (too large)
-#define PI_BAD_MILS_DELAY   -65 // bad MILS delay (too large)
-#define PI_BAD_WAVE_ID      -66 // non existent wave id
-#define PI_TOO_MANY_CBS     -67 // No more CBs for waveform
-#define PI_TOO_MANY_OOL     -68 // No more OOL for waveform
-#define PI_EMPTY_WAVEFORM   -69 // attempt to create an empty waveform
-#define PI_NO_WAVEFORM_ID   -70 // no more waveforms
-#define PI_I2C_OPEN_FAILED  -71 // can't open I2C device
-#define PI_SER_OPEN_FAILED  -72 // can't open serial device
-#define PI_SPI_OPEN_FAILED  -73 // can't open SPI device
-#define PI_BAD_I2C_BUS      -74 // bad I2C bus
-#define PI_BAD_I2C_ADDR     -75 // bad I2C address
-#define PI_BAD_SPI_CHANNEL  -76 // bad SPI channel
-#define PI_BAD_FLAGS        -77 // bad i2c/spi/ser open flags
-#define PI_BAD_SPI_SPEED    -78 // bad SPI speed
-#define PI_BAD_SER_DEVICE   -79 // bad serial device name
-#define PI_BAD_SER_SPEED    -80 // bad serial baud rate
-#define PI_BAD_PARAM        -81 // bad i2c/spi/ser parameter
-#define PI_I2C_WRITE_FAILED -82 // i2c write failed
-#define PI_I2C_READ_FAILED  -83 // i2c read failed
-#define PI_BAD_SPI_COUNT    -84 // bad SPI count
-#define PI_SER_WRITE_FAILED -85 // ser write failed
-#define PI_SER_READ_FAILED  -86 // ser read failed
-#define PI_SER_READ_NO_DATA -87 // ser read no data available
-#define PI_UNKNOWN_COMMAND  -88 // unknown command
-#define PI_SPI_XFER_FAILED  -89 // spi xfer/read/write failed
-#define PI_BAD_POINTER      -90 // bad (NULL) pointer
-#define PI_NO_AUX_SPI       -91 // no auxiliary SPI on Pi A or B
-#define PI_NOT_PWM_GPIO     -92 // GPIO is not in use for PWM
-#define PI_NOT_SERVO_GPIO   -93 // GPIO is not in use for servo pulses
-#define PI_NOT_HCLK_GPIO    -94 // GPIO has no hardware clock
-#define PI_NOT_HPWM_GPIO    -95 // GPIO has no hardware PWM
-#define PI_BAD_HPWM_FREQ    -96 // invalid hardware PWM frequency
-#define PI_BAD_HPWM_DUTY    -97 // hardware PWM dutycycle not 0-1M
-#define PI_BAD_HCLK_FREQ    -98 // invalid hardware clock frequency
-#define PI_BAD_HCLK_PASS    -99 // need password to use hardware clock 1
-#define PI_HPWM_ILLEGAL    -100 // illegal, PWM in use for main clock
-#define PI_BAD_DATABITS    -101 // serial data bits not 1-32
-#define PI_BAD_STOPBITS    -102 // serial (half) stop bits not 2-8
-#define PI_MSG_TOOBIG      -103 // socket/pipe message too big
-#define PI_BAD_MALLOC_MODE -104 // bad memory allocation mode
-#define PI_TOO_MANY_SEGS   -105 // too many I2C transaction segments
-#define PI_BAD_I2C_SEG     -106 // an I2C transaction segment failed
-#define PI_BAD_SMBUS_CMD   -107 // SMBus command not supported by driver
-#define PI_NOT_I2C_GPIO    -108 // no bit bang I2C in progress on GPIO
-#define PI_BAD_I2C_WLEN    -109 // bad I2C write length
-#define PI_BAD_I2C_RLEN    -110 // bad I2C read length
-#define PI_BAD_I2C_CMD     -111 // bad I2C command
-#define PI_BAD_I2C_BAUD    -112 // bad I2C baud rate, not 50-500k
-#define PI_CHAIN_LOOP_CNT  -113 // bad chain loop count
-#define PI_BAD_CHAIN_LOOP  -114 // empty chain loop
-#define PI_CHAIN_COUNTER   -115 // too many chain counters
-#define PI_BAD_CHAIN_CMD   -116 // bad chain command
-#define PI_BAD_CHAIN_DELAY -117 // bad chain delay micros
-#define PI_CHAIN_NESTING   -118 // chain counters nested too deeply
-#define PI_CHAIN_TOO_BIG   -119 // chain is too long
-#define PI_DEPRECATED      -120 // deprecated function removed
-#define PI_BAD_SER_INVERT  -121 // bit bang serial invert not 0 or 1
-#define PI_BAD_EDGE        -122 // bad ISR edge value, not 0-2
-#define PI_BAD_ISR_INIT    -123 // bad ISR initialisation
-#define PI_BAD_FOREVER     -124 // loop forever must be last command
-#define PI_BAD_FILTER      -125 // bad filter parameter
-#define PI_BAD_PAD         -126 // bad pad number
-#define PI_BAD_STRENGTH    -127 // bad pad drive strength
-#define PI_FIL_OPEN_FAILED -128 // file open failed
-#define PI_BAD_FILE_MODE   -129 // bad file mode
-#define PI_BAD_FILE_FLAG   -130 // bad file flag
-#define PI_BAD_FILE_READ   -131 // bad file read
-#define PI_BAD_FILE_WRITE  -132 // bad file write
-#define PI_FILE_NOT_ROPEN  -133 // file not open for read
-#define PI_FILE_NOT_WOPEN  -134 // file not open for write
-#define PI_BAD_FILE_SEEK   -135 // bad file seek
-#define PI_NO_FILE_MATCH   -136 // no files match pattern
-#define PI_NO_FILE_ACCESS  -137 // no permission to access file
-#define PI_FILE_IS_A_DIR   -138 // file is a directory
+#define PI_INIT_FAILED -1        // gpioInitialise failed
+#define PI_BAD_USER_GPIO -2      // GPIO not 0-31
+#define PI_BAD_GPIO -3           // GPIO not 0-53
+#define PI_BAD_MODE -4           // mode not 0-7
+#define PI_BAD_LEVEL -5          // level not 0-1
+#define PI_BAD_PUD -6            // pud not 0-2
+#define PI_BAD_PULSEWIDTH -7     // pulsewidth not 0 or 500-2500
+#define PI_BAD_DUTYCYCLE -8      // dutycycle outside set range
+#define PI_BAD_TIMER -9          // timer not 0-9
+#define PI_BAD_MS -10            // ms not 10-60000
+#define PI_BAD_TIMETYPE -11      // timetype not 0-1
+#define PI_BAD_SECONDS -12       // seconds < 0
+#define PI_BAD_MICROS -13        // micros not 0-999999
+#define PI_TIMER_FAILED -14      // gpioSetTimerFunc failed
+#define PI_BAD_WDOG_TIMEOUT -15  // timeout not 0-60000
+#define PI_NO_ALERT_FUNC -16     // DEPRECATED
+#define PI_BAD_CLK_PERIPH -17    // clock peripheral not 0-1
+#define PI_BAD_CLK_SOURCE -18    // DEPRECATED
+#define PI_BAD_CLK_MICROS -19    // clock micros not 1, 2, 4, 5, 8, or 10
+#define PI_BAD_BUF_MILLIS -20    // buf millis not 100-10000
+#define PI_BAD_DUTYRANGE -21     // dutycycle range not 25-40000
+#define PI_BAD_DUTY_RANGE -21    // DEPRECATED (use PI_BAD_DUTYRANGE)
+#define PI_BAD_SIGNUM -22        // signum not 0-63
+#define PI_BAD_PATHNAME -23      // can't open pathname
+#define PI_NO_HANDLE -24         // no handle available
+#define PI_BAD_HANDLE -25        // unknown handle
+#define PI_BAD_IF_FLAGS -26      // ifFlags > 4
+#define PI_BAD_CHANNEL -27       // DMA channel not 0-15
+#define PI_BAD_PRIM_CHANNEL -27  // DMA primary channel not 0-15
+#define PI_BAD_SOCKET_PORT -28   // socket port not 1024-32000
+#define PI_BAD_FIFO_COMMAND -29  // unrecognized fifo command
+#define PI_BAD_SECO_CHANNEL -30  // DMA secondary channel not 0-15
+#define PI_NOT_INITIALISED -31   // function called before gpioInitialise
+#define PI_INITIALISED -32       // function called after gpioInitialise
+#define PI_BAD_WAVE_MODE -33     // waveform mode not 0-3
+#define PI_BAD_CFG_INTERNAL -34  // bad parameter in gpioCfgInternals call
+#define PI_BAD_WAVE_BAUD -35     // baud rate not 50-250K(RX)/50-1M(TX)
+#define PI_TOO_MANY_PULSES -36   // waveform has too many pulses
+#define PI_TOO_MANY_CHARS -37    // waveform has too many chars
+#define PI_NOT_SERIAL_GPIO -38   // no bit bang serial read on GPIO
+#define PI_BAD_SERIAL_STRUC -39  // bad (null) serial structure parameter
+#define PI_BAD_SERIAL_BUF -40    // bad (null) serial buf parameter
+#define PI_NOT_PERMITTED -41     // GPIO operation not permitted
+#define PI_SOME_PERMITTED -42    // one or more GPIO not permitted
+#define PI_BAD_WVSC_COMMND -43   // bad WVSC subcommand
+#define PI_BAD_WVSM_COMMND -44   // bad WVSM subcommand
+#define PI_BAD_WVSP_COMMND -45   // bad WVSP subcommand
+#define PI_BAD_PULSELEN -46      // trigger pulse length not 1-100
+#define PI_BAD_SCRIPT -47        // invalid script
+#define PI_BAD_SCRIPT_ID -48     // unknown script id
+#define PI_BAD_SER_OFFSET -49    // add serial data offset > 30 minutes
+#define PI_GPIO_IN_USE -50       // GPIO already in use
+#define PI_BAD_SERIAL_COUNT -51  // must read at least a byte at a time
+#define PI_BAD_PARAM_NUM -52     // script parameter id not 0-9
+#define PI_DUP_TAG -53           // script has duplicate tag
+#define PI_TOO_MANY_TAGS -54     // script has too many tags
+#define PI_BAD_SCRIPT_CMD -55    // illegal script command
+#define PI_BAD_VAR_NUM -56       // script variable id not 0-149
+#define PI_NO_SCRIPT_ROOM -57    // no more room for scripts
+#define PI_NO_MEMORY -58         // can't allocate temporary memory
+#define PI_SOCK_READ_FAILED -59  // socket read failed
+#define PI_SOCK_WRIT_FAILED -60  // socket write failed
+#define PI_TOO_MANY_PARAM -61    // too many script parameters (> 10)
+#define PI_NOT_HALTED -62        // DEPRECATED
+#define PI_SCRIPT_NOT_READY -62  // script initialising
+#define PI_BAD_TAG -63           // script has unresolved tag
+#define PI_BAD_MICS_DELAY -64    // bad MICS delay (too large)
+#define PI_BAD_MILS_DELAY -65    // bad MILS delay (too large)
+#define PI_BAD_WAVE_ID -66       // non existent wave id
+#define PI_TOO_MANY_CBS -67      // No more CBs for waveform
+#define PI_TOO_MANY_OOL -68      // No more OOL for waveform
+#define PI_EMPTY_WAVEFORM -69    // attempt to create an empty waveform
+#define PI_NO_WAVEFORM_ID -70    // no more waveforms
+#define PI_I2C_OPEN_FAILED -71   // can't open I2C device
+#define PI_SER_OPEN_FAILED -72   // can't open serial device
+#define PI_SPI_OPEN_FAILED -73   // can't open SPI device
+#define PI_BAD_I2C_BUS -74       // bad I2C bus
+#define PI_BAD_I2C_ADDR -75      // bad I2C address
+#define PI_BAD_SPI_CHANNEL -76   // bad SPI channel
+#define PI_BAD_FLAGS -77         // bad i2c/spi/ser open flags
+#define PI_BAD_SPI_SPEED -78     // bad SPI speed
+#define PI_BAD_SER_DEVICE -79    // bad serial device name
+#define PI_BAD_SER_SPEED -80     // bad serial baud rate
+#define PI_BAD_PARAM -81         // bad i2c/spi/ser parameter
+#define PI_I2C_WRITE_FAILED -82  // i2c write failed
+#define PI_I2C_READ_FAILED -83   // i2c read failed
+#define PI_BAD_SPI_COUNT -84     // bad SPI count
+#define PI_SER_WRITE_FAILED -85  // ser write failed
+#define PI_SER_READ_FAILED -86   // ser read failed
+#define PI_SER_READ_NO_DATA -87  // ser read no data available
+#define PI_UNKNOWN_COMMAND -88   // unknown command
+#define PI_SPI_XFER_FAILED -89   // spi xfer/read/write failed
+#define PI_BAD_POINTER -90       // bad (NULL) pointer
+#define PI_NO_AUX_SPI -91        // no auxiliary SPI on Pi A or B
+#define PI_NOT_PWM_GPIO -92      // GPIO is not in use for PWM
+#define PI_NOT_SERVO_GPIO -93    // GPIO is not in use for servo pulses
+#define PI_NOT_HCLK_GPIO -94     // GPIO has no hardware clock
+#define PI_NOT_HPWM_GPIO -95     // GPIO has no hardware PWM
+#define PI_BAD_HPWM_FREQ -96     // invalid hardware PWM frequency
+#define PI_BAD_HPWM_DUTY -97     // hardware PWM dutycycle not 0-1M
+#define PI_BAD_HCLK_FREQ -98     // invalid hardware clock frequency
+#define PI_BAD_HCLK_PASS -99     // need password to use hardware clock 1
+#define PI_HPWM_ILLEGAL -100     // illegal, PWM in use for main clock
+#define PI_BAD_DATABITS -101     // serial data bits not 1-32
+#define PI_BAD_STOPBITS -102     // serial (half) stop bits not 2-8
+#define PI_MSG_TOOBIG -103       // socket/pipe message too big
+#define PI_BAD_MALLOC_MODE -104  // bad memory allocation mode
+#define PI_TOO_MANY_SEGS -105    // too many I2C transaction segments
+#define PI_BAD_I2C_SEG -106      // an I2C transaction segment failed
+#define PI_BAD_SMBUS_CMD -107    // SMBus command not supported by driver
+#define PI_NOT_I2C_GPIO -108     // no bit bang I2C in progress on GPIO
+#define PI_BAD_I2C_WLEN -109     // bad I2C write length
+#define PI_BAD_I2C_RLEN -110     // bad I2C read length
+#define PI_BAD_I2C_CMD -111      // bad I2C command
+#define PI_BAD_I2C_BAUD -112     // bad I2C baud rate, not 50-500k
+#define PI_CHAIN_LOOP_CNT -113   // bad chain loop count
+#define PI_BAD_CHAIN_LOOP -114   // empty chain loop
+#define PI_CHAIN_COUNTER -115    // too many chain counters
+#define PI_BAD_CHAIN_CMD -116    // bad chain command
+#define PI_BAD_CHAIN_DELAY -117  // bad chain delay micros
+#define PI_CHAIN_NESTING -118    // chain counters nested too deeply
+#define PI_CHAIN_TOO_BIG -119    // chain is too long
+#define PI_DEPRECATED -120       // deprecated function removed
+#define PI_BAD_SER_INVERT -121   // bit bang serial invert not 0 or 1
+#define PI_BAD_EDGE -122         // bad ISR edge value, not 0-2
+#define PI_BAD_ISR_INIT -123     // bad ISR initialisation
+#define PI_BAD_FOREVER -124      // loop forever must be last command
+#define PI_BAD_FILTER -125       // bad filter parameter
+#define PI_BAD_PAD -126          // bad pad number
+#define PI_BAD_STRENGTH -127     // bad pad drive strength
+#define PI_FIL_OPEN_FAILED -128  // file open failed
+#define PI_BAD_FILE_MODE -129    // bad file mode
+#define PI_BAD_FILE_FLAG -130    // bad file flag
+#define PI_BAD_FILE_READ -131    // bad file read
+#define PI_BAD_FILE_WRITE -132   // bad file write
+#define PI_FILE_NOT_ROPEN -133   // file not open for read
+#define PI_FILE_NOT_WOPEN -134   // file not open for write
+#define PI_BAD_FILE_SEEK -135    // bad file seek
+#define PI_NO_FILE_MATCH -136    // no files match pattern
+#define PI_NO_FILE_ACCESS -137   // no permission to access file
+#define PI_FILE_IS_A_DIR -138    // file is a directory
 #define PI_BAD_SHELL_STATUS -139 // bad shell return status
-#define PI_BAD_SCRIPT_NAME -140 // bad script name
-#define PI_BAD_SPI_BAUD    -141 // bad SPI baud rate, not 50-500k
-#define PI_NOT_SPI_GPIO    -142 // no bit bang SPI in progress on GPIO
-#define PI_BAD_EVENT_ID    -143 // bad event id
-#define PI_CMD_INTERRUPTED -144 // Used by Python
-#define PI_NOT_ON_BCM2711  -145 // not available on BCM2711
-#define PI_ONLY_ON_BCM2711 -146 // only available on BCM2711
+#define PI_BAD_SCRIPT_NAME -140  // bad script name
+#define PI_BAD_SPI_BAUD -141     // bad SPI baud rate, not 50-500k
+#define PI_NOT_SPI_GPIO -142     // no bit bang SPI in progress on GPIO
+#define PI_BAD_EVENT_ID -143     // bad event id
+#define PI_CMD_INTERRUPTED -144  // Used by Python
+#define PI_NOT_ON_BCM2711 -145   // not available on BCM2711
+#define PI_ONLY_ON_BCM2711 -146  // only available on BCM2711
 
-#define PI_PIGIF_ERR_0    -2000
-#define PI_PIGIF_ERR_99   -2099
+#define PI_PIGIF_ERR_0 -2000
+#define PI_PIGIF_ERR_99 -2099
 
-#define PI_CUSTOM_ERR_0   -3000
+#define PI_CUSTOM_ERR_0 -3000
 #define PI_CUSTOM_ERR_999 -3999
 
 /*DEF_E*/
 
 /*DEF_S Defaults*/
 
-#define PI_DEFAULT_BUFFER_MILLIS           120
-#define PI_DEFAULT_CLK_MICROS              5
-#define PI_DEFAULT_CLK_PERIPHERAL          PI_CLOCK_PCM
-#define PI_DEFAULT_IF_FLAGS                0
-#define PI_DEFAULT_FOREGROUND              0
-#define PI_DEFAULT_DMA_CHANNEL             14
-#define PI_DEFAULT_DMA_PRIMARY_CHANNEL     14
-#define PI_DEFAULT_DMA_SECONDARY_CHANNEL   6
-#define PI_DEFAULT_DMA_PRIMARY_CH_2711     7
-#define PI_DEFAULT_DMA_SECONDARY_CH_2711   6
-#define PI_DEFAULT_DMA_NOT_SET             15
-#define PI_DEFAULT_SOCKET_PORT             8888
-#define PI_DEFAULT_SOCKET_PORT_STR         "8888"
-#define PI_DEFAULT_SOCKET_ADDR_STR         "localhost"
-#define PI_DEFAULT_UPDATE_MASK_UNKNOWN     0x0000000FFFFFFCLL
-#define PI_DEFAULT_UPDATE_MASK_B1          0x03E7CF93
-#define PI_DEFAULT_UPDATE_MASK_A_B2        0xFBC7CF9C
+#define PI_DEFAULT_BUFFER_MILLIS 120
+#define PI_DEFAULT_CLK_MICROS 5
+#define PI_DEFAULT_CLK_PERIPHERAL PI_CLOCK_PCM
+#define PI_DEFAULT_IF_FLAGS 0
+#define PI_DEFAULT_FOREGROUND 0
+#define PI_DEFAULT_DMA_CHANNEL 14
+#define PI_DEFAULT_DMA_PRIMARY_CHANNEL 14
+#define PI_DEFAULT_DMA_SECONDARY_CHANNEL 6
+#define PI_DEFAULT_DMA_PRIMARY_CH_2711 7
+#define PI_DEFAULT_DMA_SECONDARY_CH_2711 6
+#define PI_DEFAULT_DMA_NOT_SET 15
+#define PI_DEFAULT_SOCKET_PORT 8888
+#define PI_DEFAULT_SOCKET_PORT_STR "8888"
+#define PI_DEFAULT_SOCKET_ADDR_STR "localhost"
+#define PI_DEFAULT_UPDATE_MASK_UNKNOWN 0x0000000FFFFFFCLL
+#define PI_DEFAULT_UPDATE_MASK_B1 0x03E7CF93
+#define PI_DEFAULT_UPDATE_MASK_A_B2 0xFBC7CF9C
 #define PI_DEFAULT_UPDATE_MASK_APLUS_BPLUS 0x0080480FFFFFFCLL
-#define PI_DEFAULT_UPDATE_MASK_ZERO        0x0080000FFFFFFCLL
-#define PI_DEFAULT_UPDATE_MASK_PI2B        0x0080480FFFFFFCLL
-#define PI_DEFAULT_UPDATE_MASK_PI3B        0x0000000FFFFFFCLL
-#define PI_DEFAULT_UPDATE_MASK_PI4B        0x0000000FFFFFFCLL
-#define PI_DEFAULT_UPDATE_MASK_COMPUTE     0x00FFFFFFFFFFFFLL
-#define PI_DEFAULT_MEM_ALLOC_MODE          PI_MEM_ALLOC_AUTO
+#define PI_DEFAULT_UPDATE_MASK_ZERO 0x0080000FFFFFFCLL
+#define PI_DEFAULT_UPDATE_MASK_PI2B 0x0080480FFFFFFCLL
+#define PI_DEFAULT_UPDATE_MASK_PI3B 0x0000000FFFFFFCLL
+#define PI_DEFAULT_UPDATE_MASK_PI4B 0x0000000FFFFFFCLL
+#define PI_DEFAULT_UPDATE_MASK_COMPUTE 0x00FFFFFFFFFFFFLL
+#define PI_DEFAULT_MEM_ALLOC_MODE PI_MEM_ALLOC_AUTO
 
-#define PI_DEFAULT_CFG_INTERNALS           0
+#define PI_DEFAULT_CFG_INTERNALS 0
 
 /*DEF_E*/
 
 #endif
-
